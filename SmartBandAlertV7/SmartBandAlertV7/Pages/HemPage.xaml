@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SmartBandAlertV7.Pages.HemPage"
+             
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             Title="Hem"
+             BackgroundColor="#FFFFFF"
+             
+             >
+
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="ScanText" Text="Skanna" Clicked="Button_OnClickedScanToggle" Order="Primary"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <StackLayout Orientation="Vertical">
+        <StackLayout x:Name="batterystack" Orientation="Horizontal">
+            <Label Text="Batterinivå: " TextColor="Black" VerticalTextAlignment="Center"></Label>
+            <ProgressBar x:Name="progBar" Progress="{Binding theprog}" WidthRequest="{Binding w4}" />
+            <Label x:Name="progBarText" VerticalTextAlignment="Center" Text="{Binding theprogtext}" FontSize="18"></Label>
+            <Button BackgroundColor="{Binding bgc3}" x:Name="checkBattery" Text="Uppdatera" Clicked="Button_OnClickedBatteriUppdat"></Button>
+        </StackLayout>
+        <Label Text="Smartband Enheten:" TextColor="Black" VerticalTextAlignment="Center" FontSize="Large"></Label>
+        <ListView x:Name="theBTunits" CachingStrategy="RecycleElement" RowHeight="55" ItemsSource="{Binding Devices}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="5,5,20,5">
+                            <controls:CircleImage Source="Bluetooth.png" Aspect="AspectFill" VerticalOptions="Center" HorizontalOptions="Start">
+                                <controls:CircleImage.WidthRequest>
+                                    <OnPlatform x:TypeArguments="x:Double"
+                                                iOS="30"
+                                                Android="30"/>
+                                </controls:CircleImage.WidthRequest>
+                                <controls:CircleImage.HeightRequest>
+                                    <OnPlatform x:TypeArguments="x:Double"
+                                                iOS="30"
+                                            Android="30"/>
+                                </controls:CircleImage.HeightRequest>
+                            </controls:CircleImage>
+                            <StackLayout HorizontalOptions="Center" Orientation="Vertical" >
+                                <Label Text="{Binding Name}" FontSize="18" VerticalOptions="Start" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Rssi, StringFormat='RSSI: {0}'}" FontSize="12" VerticalOptions="StartAndExpand" HorizontalOptions="Start"/>
+                            </StackLayout>
+
+                            <Label  Text="Device Connected" IsVisible="{Binding IsConnected}" BackgroundColor="Yellow" TextColor="Black"  
+                                    HorizontalTextAlignment="Center" HeightRequest="0.1"/>
+                            <Button BackgroundColor="#000000" TextColor="#FFFFFF" x:Name="connectButton" Text="{Binding ButtonName}" 
+                                    Clicked="connectBClicked" VerticalOptions="Center"
+                                    HorizontalOptions="EndAndExpand" ></Button>
+                            <!-- 
+                            <Button BackgroundColor="#000000" TextColor="#FFFFFF" x:Name="disconnectButton" Text="Avslut" Clicked="disconnectClicked" VerticalOptions="Center"
+                                    HorizontalOptions="EndAndExpand" IsVisible="{Binding IsConnected}" > </Button>
+                            -->
+
+                        </StackLayout>
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackLayout Orientation="Vertical">
+            <Button BackgroundColor="{Binding bgc1}" x:Name="startDanger" WidthRequest="{Binding w0}" Text="Starta farligt läge" ></Button>
+            <Button Margin ="-5,0,0,0" BackgroundColor="{Binding bgc2}" x:Name="stopDanger" WidthRequest="{Binding w1}" Text="Stäng av farligt läge"></Button>
+        </StackLayout>
+    </StackLayout>
+
+
+</ContentPage>
