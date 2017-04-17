@@ -32,7 +32,7 @@ namespace SmartBandAlertV7.Pages
                 IconSource = "hem.png",
                 TargetType = typeof(HemPage)
             });
-/*
+
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "Profil",
@@ -53,10 +53,9 @@ namespace SmartBandAlertV7.Pages
             {
                 Title = "TestAlarm",
                 IconSource = "hjalp.png",
-                TargetType = typeof(GPStestPage)
+                TargetType = typeof(TestAlarmPage)
 
             });
-
 
             masterPageItems.Add(new MasterPageItem
             {
@@ -65,21 +64,20 @@ namespace SmartBandAlertV7.Pages
                 TargetType = typeof(Hjalp)
 
             });
-            */
+            
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "Om",
                 IconSource = "om.png",
                 TargetType = typeof(Om)
             });
-            /*
-
+            
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "LogOut",
                 IconSource = "om.png",
                 TargetType = typeof(LogoutPage)
-            });*/
+            });
 
             imgSRC.Source = App.ProfilePic;
             nameSet.Text = App.FacebookName;

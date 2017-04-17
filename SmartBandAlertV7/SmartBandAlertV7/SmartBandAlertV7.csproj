@@ -58,11 +58,20 @@
     <Compile Include="Models\ScanResultViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Victim.cs" />
+    <Compile Include="Pages\Beskyddare.xaml.cs">
+      <DependentUpon>Beskyddare.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HemPage.xaml.cs">
       <DependentUpon>HemPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Hjalp.xaml.cs">
+      <DependentUpon>Hjalp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LogoutPage.xaml.cs">
+      <DependentUpon>LogoutPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -75,6 +84,12 @@
     </Compile>
     <Compile Include="Pages\Om.xaml.cs">
       <DependentUpon>Om.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Profil.xaml.cs">
+      <DependentUpon>Profil.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\TestAlarmPage.xaml.cs">
+      <DependentUpon>TestAlarmPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -194,6 +209,36 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\MapNavigationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Beskyddare.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Profil.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\TestAlarmPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Hjalp.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\LogoutPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
