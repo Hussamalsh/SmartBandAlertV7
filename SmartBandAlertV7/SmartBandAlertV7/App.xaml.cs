@@ -17,7 +17,6 @@ namespace SmartBandAlertV7
         public static int ScreenHeight;
         public static int ScreenDPI;
 
-
         #region Facebook Auth Settings
         public static string AppId = "386661445019743";
         public static string DisplayName = "SBA App";
