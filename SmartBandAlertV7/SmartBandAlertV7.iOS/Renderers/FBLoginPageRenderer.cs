@@ -1,37 +1,33 @@
+﻿using Foundation;
+using Newtonsoft.Json;
+using SmartBandAlertV7.iOS.Renderers;
+using SmartBandAlertV7.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Xamarin.Forms;
-using SmartBandAlertV7.Models;
-using SmartBandAlertV7.Droid.Renderers;
-using Xamarin.Forms.Platform.Android;
-using Xamarin.Auth;
 using System.Json;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using UIKit;
+using Xamarin.Auth;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(FBLoginPage), typeof(FBLoginPageRenderer))]
 
-
-namespace SmartBandAlertV7.Droid.Renderers
+namespace SmartBandAlertV7.iOS.Renderers
 {
     public class FBLoginPageRenderer : PageRenderer
     {
+        private readonly TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
-        protected override void OnElementChanged(ElementChangedEventArgs<Page> e)
+        protected override void OnElementChanged(VisualElementChangedEventArgs e)
         {
             base.OnElementChanged(e);
+
             LoginToFacebook(false);
         }
 
@@ -39,10 +35,10 @@ namespace SmartBandAlertV7.Droid.Renderers
         {
             var loginPage = Element as FBLoginPage;
             string providername = loginPage.ProviderName;
-            var activity = this.Context as Activity;
 
 
             OAuth2Authenticator auth = null;
+
             switch (providername)
             {
                 case "Google":
@@ -56,7 +52,6 @@ namespace SmartBandAlertV7.Droid.Renderers
                                     new Uri(App.url2),
                                     new Uri(App.url3),// Set this property to the location the user will be redirected too after successfully authenticating
                                     new Uri(App.url4)
-                                    //,isUsingNativeUI: true
                                     );
 
                         break;
@@ -102,14 +97,20 @@ namespace SmartBandAlertV7.Droid.Renderers
                         App.EmailAddress = obj["email"];
                         App.ProfilePic = obj["picture"]["data"]["url"];
                         //
-                        saveset(obj["id"], obj["name"]);
+                        //saveset(obj["id"], obj["name"]);
+
+                        // Get Shared User Defaults
+                        var plist = NSUserDefaults.StandardUserDefaults;
+                        // Save value
+                        plist.SetString(obj["id"], "PrefId");
+                        plist.SetString(obj["name"], "PrefName");
+                        // Sync changes to database
+                        plist.Synchronize();
 
                     }
                     else
                     {
-                        string url1 = "https://www.googleapis.com/oauth2/v2/userinfo";
-                        string url2 = "https://www.googleapis.com/plus/v1/people/me/openIdConnect";
-                        var request = new OAuth2Request("GET", new Uri(url1), null, eargs.Account);
+                        var request = new OAuth2Request("GET", new Uri("https://www.googleapis.com/plus/v1/people/me/openIdConnect"), null, eargs.Account);
                         var result = await request.GetResponseAsync();
 
                         string resultText = result.GetResponseText();
@@ -125,38 +126,33 @@ namespace SmartBandAlertV7.Droid.Renderers
                         App.EmailAddress = obj["email"];
                         App.ProfilePic = obj["picture"];
                         //
-                        saveset(obj["id"], obj["name"]);
+                        // saveset(obj["id"], obj["name"]);
+
+                        // Get Shared User Defaults
+                        var plist = NSUserDefaults.StandardUserDefaults;
+                        // Save value
+                        plist.SetString(obj["id"], "PrefId");
+                        plist.SetString(obj["name"], "PrefName");
+                        // Sync changes to database
+                        plist.Synchronize();
+
 
                     }
 
                     // On Android: store the account
-                    AccountStore.Create(Context).Save(eargs.Account, "Facebook");
+                    //AccountStore.Create(Context).Save(eargs.Account, "Facebook");
+                    //AccountStore.Create().Save(eargs.Account, "Facebook");  //Account object is securely saved on the iOS platform
+
                     //Save as a new user to the database
                     await App.UserManager.SaveTaskAsync
-                                                         (new Models.User
-                                                         { FBID = App.FacebookId,
-                                                           UserName = App.FacebookName,
-                                                           Email = App.EmailAddress,
-                                                           ImgLink = App.ProfilePic
-                                                         }, 
-                                                         true);
+                            (new Models.User { FBID = App.FacebookId, UserName = App.FacebookName, Email = App.EmailAddress, ImgLink = App.ProfilePic }, true);
 
-                   /* GPSLocation gpsloc = new GPSLocation();
-                    var position = await gpsloc.getLocationAsync();
-                    App.UserManager.saveUserLocation(new Models.Location
-                    {
-                        FBID = App.FacebookId,
-                        UserName = App.FacebookName,
-                        Latitude = position.Latitude.ToString(),
-                        Longitude = position.Longitude.ToString(),
-                        Distance = null
-                    });
-                    */
+
                     //retreive gcm id
-                    var prefs = Android.App.Application.Context.GetSharedPreferences("MyApp", FileCreationMode.Private);
-                    string id = prefs.GetString("regId", null);
+                    // var prefs = Android.App.Application.Context.GetSharedPreferences("MyApp", FileCreationMode.Private);
+                    //string id = prefs.GetString("regId", null);
 
-                    RegisterAsync(id, new string[] { App.FacebookId + "T" }, App.FacebookId);
+                    //RegisterAsync(id, new string[] { App.FacebookId + "T" }, App.FacebookId);
 
                     await App.Current.MainPage.Navigation.PopModalAsync();
                     App.IsLoggedIn = true;
@@ -166,22 +162,15 @@ namespace SmartBandAlertV7.Droid.Renderers
             };
 
 
-            Intent intent = (Intent)auth.GetUI(activity);
-            activity.StartActivity(intent);
+            UIViewController vc = (UIViewController)auth.GetUI();
+
+            ViewController.AddChildViewController(vc);
+            ViewController.View.Add(vc.View);
+
+            vc.ChildViewControllers[0].NavigationItem.LeftBarButtonItem = new UIBarButtonItem(
+                UIBarButtonSystemItem.Cancel, async (o, eargs) => await App.Current.MainPage.Navigation.PopModalAsync()
+            );
         }
-
-        protected void saveset(string id, string name)
-        {
-
-            //store
-            var prefs = Android.App.Application.Context.GetSharedPreferences("MyApp", FileCreationMode.Private);
-            var prefEditor = prefs.Edit();
-            prefEditor.PutString("PrefId", id);
-            prefEditor.PutString("PrefName", name);
-            prefEditor.Commit();
-
-        }
-
 
 
 
@@ -195,7 +184,7 @@ namespace SmartBandAlertV7.Droid.Renderers
         }
 
         //POST_URL = backendEndpoint + "/api/register";
-        private string POST_URL = "https://sbat1.azurewebsites.net/api/register";
+        private string POST_URL = "http://sbat1.azurewebsites.net/api/register";
         HttpClient client;
 
         public async Task RegisterAsync(string handle, IEnumerable<string> tags, string fid)

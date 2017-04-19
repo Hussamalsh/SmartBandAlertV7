@@ -67,7 +67,10 @@ namespace SmartBandAlertV7
 
             PresentMainPage();
 
+
         }
+
+
         public void PresentMainPage()
         {
             if (NotificationOn)
@@ -165,7 +168,13 @@ namespace SmartBandAlertV7
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+           /* // Handle when your app starts
+            Device.StartTimer(TimeSpan.FromSeconds(180), () =>
+            {
+                // Do something
+                sendUserLocationAsync();
+                return false; // True = Repeat again, False = Stop the timer
+            });*/
         }
 
         protected override void OnSleep()
@@ -176,6 +185,20 @@ namespace SmartBandAlertV7
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        public async System.Threading.Tasks.Task sendUserLocationAsync()
+        {
+            GPSLocation gpsloc = new GPSLocation();
+            var position = await gpsloc.getLocationAsync();
+            UserManager.editUserLocation(new Models.Location
+            {
+                FBID = App.FacebookId,
+                UserName = App.FacebookName,
+                Latitude = position.Latitude.ToString(),
+                Longitude = position.Longitude.ToString(),
+                Distance = null
+            });
         }
     }
 }

@@ -48,11 +48,13 @@
     <Compile Include="Data\UserManager.cs" />
     <Compile Include="Data\VictimManager.cs" />
     <Compile Include="Data\IProfileManager.cs" />
+    <Compile Include="GPSLocation.cs" />
     <Compile Include="Messages\StartLongRunningTaskMessage.cs" />
     <Compile Include="Messages\StopLongRunningTaskMessage.cs" />
     <Compile Include="Models\BLEAcrProfile.cs" />
     <Compile Include="Models\FBLoginPage.cs" />
     <Compile Include="Models\FriendsList.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\MasterPageItem.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\ScanResultViewModel.cs" />

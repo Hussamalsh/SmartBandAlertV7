@@ -29,7 +29,15 @@ namespace SmartBandAlertV7.Data
           // return restService.DeleteTodoItemAsync(item.FBID);
             return null;
         }
-
+        //User
+        public void saveUserLocation(Location userloc)
+        {
+            restService.SaveUserLocationAsync(userloc);
+        }
+        public void editUserLocation(Location userloc)
+        {
+            restService.editUserLocationAsync(userloc);
+        }
         public Task<List<User>> SearchUsersAsync(string text)
         {
             return restService.SearchUsersAsync(text);

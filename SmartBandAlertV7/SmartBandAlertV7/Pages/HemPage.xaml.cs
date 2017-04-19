@@ -349,22 +349,28 @@ namespace SmartBandAlertV7.Pages
         public async Task getLocationAsync()
         {
             victim = new Victim();
-            var locator = CrossGeolocator.Current;
-            locator.DesiredAccuracy = 50;
+            /*   var locator = CrossGeolocator.Current;
+               locator.DesiredAccuracy = 50;
 
-            var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
+               var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
 
-            if (position == null)
+               if (position == null)
 
-            {
-                return;
-            }
+               {
+                   return;
+               }*/
+
+
 
             //labelGPS.Text = string.Format("Time: {0} \nLat: {1} \nLong: {2} \n Altitude: {3} \nAltitude Accuracy: {4} \nAccuracy: {5} \n Heading: {6} \n Speed: {7}",
 
             //  position.Timestamp, position.Latitude, position.Longitude,
 
             //  position.Altitude, position.AltitudeAccuracy, position.Accuracy, position.Heading, position.Speed);
+
+
+            GPSLocation gpsloc = new GPSLocation();
+            var position = await gpsloc.getLocationAsync();
 
             Geocoder geoCoder = new Geocoder();
             var fortMasonPosition = new Position(position.Latitude, position.Longitude);

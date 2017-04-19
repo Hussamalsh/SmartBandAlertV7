@@ -162,5 +162,26 @@ namespace SmartBandAlertV7.Data
 
             }
         }
+
+        public void SaveUserLocationAsync(Location userloc)
+        {
+           var obj = JsonConvert.SerializeObject(userloc, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+           var request = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/location/");
+           request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+           var data = client.SendAsync(request).Result;
+        }
+
+        public void editUserLocationAsync(Location userloc)
+        {
+            var obj = JsonConvert.SerializeObject(userloc, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            var request = new HttpRequestMessage(HttpMethod.Put, "https://sbat1.azurewebsites.net/api/location/");
+            request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+            var data = client.SendAsync(request).Result;
+        }
+
+
+
+
+
     }
 }
