@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading;
@@ -36,7 +37,6 @@ namespace SmartBandAlertV7.Pages
 
 
         public BLEAcrProfileManager bleACRProfileManager;
-        public bool dangerModeOn = false;
         public HemPage()
         {
 
@@ -62,7 +62,10 @@ namespace SmartBandAlertV7.Pages
                 if (App.isConnectedBLE)
                 {
                     //subNoTIFY.Dispose();
-                    dangerModeOn = true;
+                    App.dangerModeOn = true;
+                    
+                    connectToBackend(true);
+
                     var message = new StartLongRunningTaskMessage();
                     MessagingCenter.Send(message, "StartLongRunningTaskMessage");
                 }
@@ -71,10 +74,33 @@ namespace SmartBandAlertV7.Pages
             };
 
             stopDanger.Clicked += (s, e) => {
-                dangerModeOn = false;
+                App.dangerModeOn = false;
+                connectToBackend(false);
+
                 var message = new StopLongRunningTaskMessage();
                 MessagingCenter.Send(message, "StopLongRunningTaskMessage");
             };
+
+        }
+        public async void connectToBackend(bool connect)
+        {
+            if (connect)
+            {
+                //activate danger mode in backend
+                 App.VictimManager.setDM(getLocationAsync(), connect);
+            }
+            else
+            {
+                //deactive danger mode in backend
+                 App.VictimManager.setDM(getLocationAsync(), connect);
+            }
+        }
+
+        public void uppdateLiveValue()
+        {
+            App.VictimManager.setliveMode();
+
+
 
         }
         protected override async void OnAppearing()
@@ -107,6 +133,8 @@ namespace SmartBandAlertV7.Pages
                     this.IsScanning = on;
                     this.ScanText.Text = on ? "Stop Scan" : "Scan";
                 });
+   
+                
             }
             else
                 await DisplayAlert("Error: Bluetooth is off?", "Turn on the Bluetooth?", "OK");
@@ -258,10 +286,51 @@ namespace SmartBandAlertV7.Pages
                     bleACRProfileManager.bleprofile.CharacteristicWrite = characteristic;
                 }
 
+                //222
+                bleACRProfileManager.bleprofile.device
+                .WhenMtuChanged()
+                .Skip(1)
+                .Subscribe(x => 
+                        {
+                             UserDialogs.Instance.Alert("Reconnected to the SBA device");
+                            if (bleACRProfileManager.bleprofile.Devices.Count != 0)
+                                this.theBTunits.ItemsSource = bleACRProfileManager.bleprofile.Devices;
+                        });
+
+                bleACRProfileManager.bleprofile.device
+                .WhenStatusChanged().TakeLast(1)
+                .Subscribe(status =>
+                           {
+                               if (status == ConnectionStatus.Disconnected)
+                               {
+                                   // Navigate to new page
+                                   if (App.dangerModeOn)
+                                   {
+
+                                       Device.StartTimer(TimeSpan.FromSeconds(300), () =>
+                                       {
+                                           if (!App.isConnectedBLE)
+                                           {
+                                               UserDialogs.Instance.Alert("DangerMode = On, Disconnected from the SBA device");
+                                               Debug.WriteLine("DangerMode = Something Dangeres Happen");
+                                               SendAlarm(true);
+                                           }
+
+                                           return false; // True = Repeat again, False = Stop the timer
+                                       });
+                                   }
+
+                               }else if (status == ConnectionStatus.Connected || status == ConnectionStatus.Connecting)
+                               {
+                                   App.isConnectedBLE = true;
+                               }
+
+                           Debug.WriteLine(status.ToString());
+                           });
 
             });
         }
-
+        
         public string Value { get; set; }
 
         void SetReadValue(CharacteristicResult result, bool fromUtf8)
@@ -302,7 +371,7 @@ namespace SmartBandAlertV7.Pages
                             progBarText.BindingContext = new { theprogtext = resultlvl.ToString("#") + "%" };
                         }
                     }
-                    else if (dangerModeOn && result.Data.Length > 5)
+                    else if (App.dangerModeOn && result.Data.Length > 5)
                     {
                         postAlarm();
                     }
@@ -321,7 +390,7 @@ namespace SmartBandAlertV7.Pages
         {
             if (!postonce)
             {
-                SendAlarm();
+                SendAlarm(true);
 
                 Device.StartTimer(TimeSpan.FromSeconds(5), () =>
                 {
@@ -334,65 +403,22 @@ namespace SmartBandAlertV7.Pages
             }
         }
 
-        public async void SendAlarm()
+        public async void SendAlarm(bool newornot)
         {
 
             Debug.WriteLine("Doooooooooo Pooooooooooooost");
-
-            await getLocationAsync();
-
+           
+            await App.VictimManager.SaveTaskAsync(getLocationAsync(), newornot);
 
         }
 
-
-        public Victim victim;
-        public async Task getLocationAsync()
+        public Victim getLocationAsync()
         {
-            victim = new Victim();
-            /*   var locator = CrossGeolocator.Current;
-               locator.DesiredAccuracy = 50;
-
-               var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
-
-               if (position == null)
-
-               {
-                   return;
-               }*/
-
-
-
-            //labelGPS.Text = string.Format("Time: {0} \nLat: {1} \nLong: {2} \n Altitude: {3} \nAltitude Accuracy: {4} \nAccuracy: {5} \n Heading: {6} \n Speed: {7}",
-
-            //  position.Timestamp, position.Latitude, position.Longitude,
-
-            //  position.Altitude, position.AltitudeAccuracy, position.Accuracy, position.Heading, position.Speed);
-
-
             GPSLocation gpsloc = new GPSLocation();
-            var position = await gpsloc.getLocationAsync();
+            gpsloc.getLocationAsync();
+            gpsloc.getvictimLocationAsync();
 
-            Geocoder geoCoder = new Geocoder();
-            var fortMasonPosition = new Position(position.Latitude, position.Longitude);
-            var possibleAddresses = await geoCoder.GetAddressesForPositionAsync(fortMasonPosition);
-            //foreach (var a in possibleAddresses)
-            //{
-            //  labelCity.Text += a + "\n";
-            // }
-            //labelCity.Text = possibleAddresses.FirstOrDefault();
-
-            victim.FBID = App.FacebookId;
-            victim.UserName = App.FacebookName;
-
-            victim.StartDate = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
-            victim.Latitude = "" + position.Latitude.ToString().Replace(",", ".");
-            victim.Longitude = "" + position.Longitude.ToString().ToString().Replace(",", ".");
-            victim.Adress = "" + possibleAddresses.FirstOrDefault();
-
-
-
-            await App.VictimManager.SaveTaskAsync(victim, true);
-
+            return gpsloc.victim;
         }
 
 

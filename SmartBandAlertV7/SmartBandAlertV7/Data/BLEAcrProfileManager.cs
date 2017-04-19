@@ -85,11 +85,11 @@ namespace SmartBandAlertV7.Data
                 }))
             );
 
-            this.cleanup.Add(bleprofile.device
+            /*this.cleanup.Add(bleprofile.device
                 .WhenMtuChanged()
                 .Skip(1)
-                .Subscribe(x => UserDialogs.Instance.Alert($"MTU Changed size to {x}"))
-            );
+                .Subscribe(x => UserDialogs.Instance.Alert("Reconnected to the SBA device"))    //MTU Changed size to $"MTU Changed size to {x}"
+            );*/
 
             /*this.cleanup.Add(
             this.device.WhenAnyCharacteristicDiscovered().Subscribe(characteristic => {

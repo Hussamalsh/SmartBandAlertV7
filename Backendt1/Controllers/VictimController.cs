@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Web.Http;
 
 namespace Backendt1.Controllers
@@ -211,5 +212,46 @@ namespace Backendt1.Controllers
             return response;
 
         }
+
+        // POST: api/Victim
+        [Route("api/Victim/activatedm/")]
+        [HttpPost]
+        public HttpResponseMessage Post(bool value, string id, [FromBody]Victim victimOBJ)
+        {
+            DangerMode dmObj = new DangerMode();
+            if (value)
+            {
+                VictimPersistence vp = new VictimPersistence();
+                vp.saveUser(victimOBJ);
+                dmObj.isDangerModeOn = true;
+                dmObj.islive = true;
+                dmObj.FBID = id;
+                dmObj.isAppLive();
+                AllUsersDM.audmInstance.addnewUser(dmObj); //listan
+            }
+            else
+            {
+                AllUsersDM.audmInstance.removeUser(id);
+
+            }
+
+
+
+            return null;
+        }
+
+
+        [Route("api/Victim/islive")]
+        [HttpPost]
+        public void Post(bool value, string id, string username)
+        {
+
+            AllUsersDM.audmInstance.updateLiveValue(value, id, username);
+
+
+        }
+
+
+
     }
 }

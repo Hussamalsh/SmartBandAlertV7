@@ -21,6 +21,12 @@ namespace SmartBandAlertV7.Data
         //Victim
         Task SaveVictimAsync(Victim item, bool isNewItem);
         Task<Victim> SearchVictimAsync(string text);
+         void ActivateDangerMode(Victim item, bool isNewItem);
+
+        void setAlive();
+
+        //
         Task DeleteTodoItemAsync(String userid, String friendid);
+
     }
 }

@@ -179,9 +179,37 @@ namespace SmartBandAlertV7.Data
             var data = client.SendAsync(request).Result;
         }
 
+        public void ActivateDangerMode(Victim item, bool isNewItem)
+        {
+            //http://localhost:61212/api/Victim/activatedm?value=true&id=132569873917640
+            var obj = JsonConvert.SerializeObject(item, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            HttpRequestMessage request = null;
+            if (isNewItem)
+            {
+                 request = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/Victim/activatedm?value=true&id="
+                                                                     + item.FBID);
+            }
+            else
+            {
+                request = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/Victim/activatedm?value=false&id=" 
+                                                                  + item.FBID);
+                //response = await client.PutAsync(uri, content);
+            }
+            request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+            var data = client.SendAsync(request).Result;
+        }
 
+        public void setAlive()
+        {
+            //http://localhost:61212/api/Victim/islive?value=true&id=132569873917640&username=waddod
+           
+            var obj = JsonConvert.SerializeObject("", new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            var request = new HttpRequestMessage(HttpMethod.Post,
+                                "https://sbat1.azurewebsites.net/api/Victim/islive?value=true&id="+App.FacebookId
+                                +"&username=" + App.FacebookName);
+            request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
 
-
-
+            var data = client.SendAsync(request).Result;
+        }
     }
 }

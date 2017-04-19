@@ -166,6 +166,12 @@ namespace SmartBandAlertV7
             set;
         }
 
+        public static bool dangerModeOn
+        {
+            get;
+            set;
+        }
+
         protected override void OnStart()
         {
            /* // Handle when your app starts
@@ -187,18 +193,21 @@ namespace SmartBandAlertV7
             // Handle when your app resumes
         }
 
-        public async System.Threading.Tasks.Task sendUserLocationAsync()
+        public void sendUserLocationAsync()
         {
             GPSLocation gpsloc = new GPSLocation();
-            var position = await gpsloc.getLocationAsync();
+            gpsloc.getLocationAsync();
             UserManager.editUserLocation(new Models.Location
             {
                 FBID = App.FacebookId,
                 UserName = App.FacebookName,
-                Latitude = position.Latitude.ToString(),
-                Longitude = position.Longitude.ToString(),
+                Latitude = gpsloc.Latitude.ToString(),
+                Longitude = gpsloc.Longitude.ToString(),
                 Distance = null
             });
+
+           
+
         }
     }
 }
