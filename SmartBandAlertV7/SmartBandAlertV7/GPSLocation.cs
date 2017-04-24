@@ -15,6 +15,7 @@ namespace SmartBandAlertV7
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public DateTime TimeStamploc { get; set; }
+        public string adress { set; get; }
 
         /* public GPSLocation()
          {
@@ -32,24 +33,30 @@ namespace SmartBandAlertV7
                 return;
             }
 
-            Latitude  = position.Latitude;
-            Longitude = position.Longitude;
-            TimeStamploc = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
-        }
 
-        public async Task getvictimLocationAsync()
-        {
             Geocoder geoCoder = new Geocoder();
             var fortMasonPosition = new Position(Latitude, Longitude);
             var possibleAddresses = await geoCoder.GetAddressesForPositionAsync(fortMasonPosition);
 
+            adress = possibleAddresses.FirstOrDefault();
+
+
+            Latitude  = position.Latitude;
+            Longitude = position.Longitude;
+            TimeStamploc = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            getvictimLocationAsync();
+        }
+
+        public void getvictimLocationAsync()
+        {
             victim.FBID = App.FacebookId;
             victim.UserName = App.FacebookName;
 
             victim.StartDate = TimeStamploc;
             victim.Latitude = "" + Latitude.ToString().Replace(",", ".");
             victim.Longitude = "" + Longitude.ToString().ToString().Replace(",", ".");
-            victim.Adress = "" + possibleAddresses.FirstOrDefault();
+            victim.Adress = "" + adress;
         }
 
 

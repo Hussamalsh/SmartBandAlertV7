@@ -216,7 +216,7 @@ namespace Backendt1.Controllers
         // POST: api/Victim
         [Route("api/Victim/activatedm/")]
         [HttpPost]
-        public HttpResponseMessage Post(bool value, string id, [FromBody]Victim victimOBJ)
+        public Object[] Post(bool value, string id, [FromBody]Victim victimOBJ)
         {
             DangerMode dmObj = new DangerMode();
             if (value)
@@ -235,9 +235,7 @@ namespace Backendt1.Controllers
 
             }
 
-
-
-            return null;
+            return AllUsersDM.audmInstance.userslist.ToArray();
         }
 
 

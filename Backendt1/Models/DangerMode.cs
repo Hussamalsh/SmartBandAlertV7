@@ -71,15 +71,13 @@ namespace Backendt1.Models
                         stopTimer();
                     }
 
-
-
                     islive = false;
 
                 },
                 // optional state object to pass to the method
                 null,
                 // Execute the method after 5 seconds
-                TimeSpan.FromSeconds(360),
+                TimeSpan.FromSeconds(120),
                 // Set this to false to execute it repeatedly every 5 seconds
                 false
             );
@@ -136,6 +134,7 @@ namespace Backendt1.Models
 
                         if (firsttime)
                         {
+                            System.Threading.Thread.Sleep(1000);
                             notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =" + FBID + "\"}}";
                             outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, FBID + "T");
                             firsttime = false;

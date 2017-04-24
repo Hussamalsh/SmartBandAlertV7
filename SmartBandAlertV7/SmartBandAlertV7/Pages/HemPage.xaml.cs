@@ -64,10 +64,12 @@ namespace SmartBandAlertV7.Pages
                     //subNoTIFY.Dispose();
                     App.dangerModeOn = true;
                     
-                    connectToBackend(true);
 
                     var message = new StartLongRunningTaskMessage();
                     MessagingCenter.Send(message, "StartLongRunningTaskMessage");
+
+                    connectToBackend(true);
+
                 }
                 else
                     await DisplayAlert("Wrong ", "Conect to a device first", "Ok");
@@ -76,7 +78,7 @@ namespace SmartBandAlertV7.Pages
             stopDanger.Clicked += (s, e) => {
                 App.dangerModeOn = false;
                 connectToBackend(false);
-
+                App.ct.Cancel();
                 var message = new StopLongRunningTaskMessage();
                 MessagingCenter.Send(message, "StopLongRunningTaskMessage");
             };
@@ -86,23 +88,21 @@ namespace SmartBandAlertV7.Pages
         {
             if (connect)
             {
+                getLocationAsync(1);
                 //activate danger mode in backend
-                 App.VictimManager.setDM(getLocationAsync(), connect);
+
+                //App.VictimManager.setDM(victim, connect);
+                //Task.Run(async () => uppdateLiveValueAsync());
+
             }
             else
             {
+                getLocationAsync(11);
                 //deactive danger mode in backend
-                 App.VictimManager.setDM(getLocationAsync(), connect);
+                //App.VictimManager.setDM(getLocationAsync(), connect);
             }
         }
 
-        public void uppdateLiveValue()
-        {
-            App.VictimManager.setliveMode();
-
-
-
-        }
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -287,17 +287,9 @@ namespace SmartBandAlertV7.Pages
                 }
 
                 //222
-                bleACRProfileManager.bleprofile.device
-                .WhenMtuChanged()
-                .Skip(1)
-                .Subscribe(x => 
-                        {
-                             UserDialogs.Instance.Alert("Reconnected to the SBA device");
-                            if (bleACRProfileManager.bleprofile.Devices.Count != 0)
-                                this.theBTunits.ItemsSource = bleACRProfileManager.bleprofile.Devices;
-                        });
 
-                bleACRProfileManager.bleprofile.device
+
+               /* bleACRProfileManager.bleprofile.device
                 .WhenStatusChanged().TakeLast(1)
                 .Subscribe(status =>
                            {
@@ -326,7 +318,7 @@ namespace SmartBandAlertV7.Pages
                                }
 
                            Debug.WriteLine(status.ToString());
-                           });
+                           });*/
 
             });
         }
@@ -405,21 +397,122 @@ namespace SmartBandAlertV7.Pages
 
         public async void SendAlarm(bool newornot)
         {
-
-            Debug.WriteLine("Doooooooooo Pooooooooooooost");
-           
-            await App.VictimManager.SaveTaskAsync(getLocationAsync(), newornot);
-
+                getLocationAsync(2);
         }
+        public Victim victim { set; get; } = new Victim();
 
-        public Victim getLocationAsync()
+        public async void getLocationAsync(int p)
         {
-            GPSLocation gpsloc = new GPSLocation();
-            gpsloc.getLocationAsync();
-            gpsloc.getvictimLocationAsync();
-
-            return gpsloc.victim;
+              await getLocationAsync1(p);
         }
+
+        public async Task getLocationAsync1(int p)
+        {
+            var locator = CrossGeolocator.Current;
+            locator.DesiredAccuracy = 50;
+
+
+            var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
+
+
+
+            if (position == null)
+
+            {
+
+                //labelGPS.Text = "null gps :(";
+
+                return;
+
+            }
+
+            /*labelGPS.Text = string.Format("Time: {0} \nLat: {1} \nLong: {2} \n Altitude: {3} \nAltitude Accuracy: {4} \nAccuracy: {5} \n Heading: {6} \n Speed: {7}",
+
+               position.Timestamp, position.Latitude, position.Longitude,
+
+               position.Altitude, position.AltitudeAccuracy, position.Accuracy, position.Heading, position.Speed);*/
+
+            Geocoder geoCoder = new Geocoder();
+            var fortMasonPosition = new Position(position.Latitude, position.Longitude);
+            var possibleAddresses = await geoCoder.GetAddressesForPositionAsync(fortMasonPosition);
+
+            victim.FBID = App.FacebookId;
+            victim.UserName = App.FacebookName;
+
+            victim.StartDate = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+            victim.Latitude = "" + position.Latitude.ToString().Replace(",", ".");
+            victim.Longitude = "" + position.Longitude.ToString().ToString().Replace(",", ".");
+            victim.Adress = "" + possibleAddresses.FirstOrDefault();
+
+            if (p == 1)
+            {
+                App.VictimManager.setDM(victim, true);
+                Task.Run(async () => uppdateLiveValueAsync());
+            }
+
+            if (p == 2)
+            {
+                await App.VictimManager.SaveTaskAsync(victim, true);
+            }
+
+            if (p == 11)
+            {
+                App.VictimManager.setDM(victim, false);
+            }
+
+        }
+
+        public async Task uppdateLiveValueAsync()
+        {
+            //App.VictimManager.setliveMode();
+
+
+            App.ct = new CancellationTokenSource();
+            while (!App.ct.IsCancellationRequested)
+            {
+                try
+                {
+                    //await Task.Delay(60000 - (int)(watch.ElapsedMilliseconds%1000), token);
+                    App.ct.Token.ThrowIfCancellationRequested();
+                    await Task.Delay(TimeSpan.FromSeconds(60), App.ct.Token).ContinueWith(async (arg) =>
+                    {
+                        if (!App.ct.Token.IsCancellationRequested)
+                        {
+                            App.ct.Token.ThrowIfCancellationRequested();
+                            /*
+							 * HERE YOU CAN DO YOUR ACTION
+							 */
+                            Device.BeginInvokeOnMainThread(() => App.VictimManager.setliveMode());
+                        }
+                    });
+                    //Debug.WriteLine (DateTime.Now.ToLocalTime ().ToString () + " DELAY: " + delay);
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("EX 1: " + ex.Message);
+                }
+
+            }
+
+            //				try{
+            //
+            //					//Device.BeginInvokeOnMainThread(() => this.lblTimerText.Text = (DateTime.Now - startTime).ToString());
+            //					//Device.BeginInvokeOnMainThread(() => this._labelOra.Text = watch.Elapsed.ToString());
+            //					if (!App.CancellationToken.Token.IsCancellationRequested) {
+            //						App.CancellationToken.Token.ThrowIfCancellationRequested();
+            //						Device.BeginInvokeOnMainThread(()=> _label.Text = (++_counter).ToString());
+            //						Debug.WriteLine ("TimerRunning " + _counter.ToString());// + watch.Elapsed.ToString ());
+            //					}
+            //				}
+            //				catch (Exception ex){
+            //					Debug.WriteLine("EX 2 " + ex.Message);
+            //				}
+
+
+
+        }
+
 
 
     }

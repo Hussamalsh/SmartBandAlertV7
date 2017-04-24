@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading;
 using Xamarin.Forms;
 
 namespace SmartBandAlertV7
@@ -171,6 +171,13 @@ namespace SmartBandAlertV7
             get;
             set;
         }
+
+        public static CancellationTokenSource ct
+        {
+            get;
+            set;
+        }
+
 
         protected override void OnStart()
         {

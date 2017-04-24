@@ -22,7 +22,7 @@ namespace SmartBandAlertV7.Data
         {
             return restService.SearchVictimAsync(text);
         }
-        public void setDM(Victim item, bool isNewItem = false)
+        public void setDM(Victim item, bool isNewItem = true)
         {
              restService.ActivateDangerMode(item, isNewItem);
         }

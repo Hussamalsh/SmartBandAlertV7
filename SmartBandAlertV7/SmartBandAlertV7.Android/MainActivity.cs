@@ -17,6 +17,7 @@ using SmartBandAlertV7.Messages;
 using Xamarin.Forms;
 using SmartBandAlertV7.Droid.Services;
 using Gcm.Client;
+using Plugin.Permissions;
 
 namespace SmartBandAlertV7.Droid
 {
@@ -76,6 +77,9 @@ namespace SmartBandAlertV7.Droid
 
             Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
             Xamarin.FormsMaps.Init(this, savedInstanceState);
+
+
+
 
 
             LoadApplication(new App());
@@ -175,6 +179,11 @@ namespace SmartBandAlertV7.Droid
                 return true;
             }
             return false;
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
 

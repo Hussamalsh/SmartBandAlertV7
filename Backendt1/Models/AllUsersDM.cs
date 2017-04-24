@@ -18,6 +18,14 @@ namespace Backendt1.Models
 
         public void addnewUser(DangerMode dm)
         {
+            if (userslist.Count != 0)
+            {
+                bool hasItem = userslist.Cast<DangerMode>().Any(i => i.FBID == dm.FBID);
+                if (hasItem)
+                {
+                    removeUser(dm.FBID);
+                }
+            }
             userslist.Add(dm);
         }
 

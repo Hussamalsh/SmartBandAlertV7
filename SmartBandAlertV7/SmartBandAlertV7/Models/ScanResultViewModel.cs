@@ -24,7 +24,7 @@ namespace SmartBandAlertV7.Models
         public int TxPower { get; private set; }
 
 
-        public string ButtonName => ((IsConnected) ? "Avsluta" : "Ansluta");
+        public string ButtonName => ((IsConnected) ? "Koppla från" : "Anslut");
 
         //public ConnectionStatus Status { get; private set; } = ConnectionStatus.Disconnected;
 

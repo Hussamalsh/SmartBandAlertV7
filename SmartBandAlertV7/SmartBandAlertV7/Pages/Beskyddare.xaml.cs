@@ -27,6 +27,7 @@ namespace SmartBandAlertV7.Pages
             friendEXISTINGView.ItemSelected += (sender, e) => friendEXISTINGView.SelectedItem = null;
             friendSEARCHView.ItemSelected += (sender, e) => friendSEARCHView.SelectedItem = null;
 
+
         }
 
 
@@ -35,6 +36,8 @@ namespace SmartBandAlertV7.Pages
 
             base.OnAppearing();
             //var list = await App.UserManager.GetTasksAsync();
+            //friendEXISTINGView.ItemsSource = new string[] { "Loading friends", "Loading friends", "Loading friends", "Loading friends" };
+
             var list = await App.FriendsManager.GetTasksAsync();
             friendEXISTINGView.ItemsSource = list;
 
