@@ -73,6 +73,10 @@ namespace SmartBandAlertV7
 
         public void PresentMainPage()
         {
+            if (IsLoggedIn)
+            {
+                sendUserLocationAsync();
+            }
             if (NotificationOn)
             {
                 MainPage = new MapNavigationPage(VictimId);
@@ -178,16 +182,28 @@ namespace SmartBandAlertV7
             set;
         }
 
+        public static double Latitude
+        {
+            get;
+            set;
+        }
+
+        public static double Longitude
+        {
+            get;
+            set;
+        }
+
 
         protected override void OnStart()
         {
-           /* // Handle when your app starts
-            Device.StartTimer(TimeSpan.FromSeconds(180), () =>
-            {
-                // Do something
-                sendUserLocationAsync();
-                return false; // True = Repeat again, False = Stop the timer
-            });*/
+            /* // Handle when your app starts
+             Device.StartTimer(TimeSpan.FromSeconds(180), () =>
+             {
+                 // Do something
+                 sendUserLocationAsync();
+                 return false; // True = Repeat again, False = Stop the timer
+             });*/
         }
 
         protected override void OnSleep()
@@ -202,18 +218,13 @@ namespace SmartBandAlertV7
 
         public void sendUserLocationAsync()
         {
-            GPSLocation gpsloc = new GPSLocation();
-            gpsloc.getLocationAsync();
-            UserManager.editUserLocation(new Models.Location
+            Device.StartTimer(TimeSpan.FromSeconds(100), () =>
             {
-                FBID = App.FacebookId,
-                UserName = App.FacebookName,
-                Latitude = gpsloc.Latitude.ToString(),
-                Longitude = gpsloc.Longitude.ToString(),
-                Distance = null
+                // Do something
+                GPSLocation gpsloc = new GPSLocation();
+                gpsloc.getLocationAsync(true);
+                return false; // True = Repeat again, False = Stop the timer
             });
-
-           
 
         }
     }

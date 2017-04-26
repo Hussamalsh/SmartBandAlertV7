@@ -4,7 +4,6 @@
              x:Class="SmartBandAlertV7.Pages.MasterPage"
              
              xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
-             Padding="0,40,0,0"
              Title="MasterPage"
              >
 

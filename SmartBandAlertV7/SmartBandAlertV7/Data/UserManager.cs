@@ -1,6 +1,7 @@
 ﻿using SmartBandAlertV7.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,13 +31,17 @@ namespace SmartBandAlertV7.Data
             return null;
         }
         //User
-        public void saveUserLocation(Location userloc)
+        public IObservable<Location[]> saveUserLocation()
         {
-            restService.SaveUserLocationAsync(userloc);
+            return restService.SaveUserLocationAsync();
         }
         public void editUserLocation(Location userloc)
         {
             restService.editUserLocationAsync(userloc);
+        }
+        public IObservable<Location[]> testone()
+        {
+            return restService.test();
         }
         public Task<List<User>> SearchUsersAsync(string text)
         {

@@ -47,7 +47,12 @@ namespace SmartBandAlertV7.Pages
                 TargetType = typeof(Beskyddare)
             });
 
-
+            masterPageItems.Add(new MasterPageItem
+            {
+                Title = "NearByUsers",
+                IconSource = "om.png",
+                TargetType = typeof(NearByUsers)
+            });
 
             masterPageItems.Add(new MasterPageItem
             {

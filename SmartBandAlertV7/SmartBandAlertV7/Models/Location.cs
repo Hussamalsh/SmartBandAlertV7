@@ -9,14 +9,14 @@ namespace SmartBandAlertV7.Models
     public class Location
     {
 
-        public String FBID { get; set; }
+        public String fbid { get; set; }
 
-        public String UserName { get; set; }
+        public String userName { get; set; }
 
-        public String Latitude { get; set; }
+        public String latitude { get; set; }
 
-        public String Longitude { get; set; }
-        public String Distance { get; set; }
+        public String longitude { get; set; }
+        public String distance { get; set; }
 
     }
 }

@@ -1,8 +1,11 @@
-﻿using SmartBandAlertV7.Models;
+﻿using Acr.UserDialogs;
+using SmartBandAlertV7.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -38,8 +41,14 @@ namespace SmartBandAlertV7.Pages
             //var list = await App.UserManager.GetTasksAsync();
             //friendEXISTINGView.ItemsSource = new string[] { "Loading friends", "Loading friends", "Loading friends", "Loading friends" };
 
-            var list = await App.FriendsManager.GetTasksAsync();
-            friendEXISTINGView.ItemsSource = list;
+            using (var cancelSrc = new CancellationTokenSource())
+            {
+                using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                {
+                    friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                }
+
+            }
 
         }
 
@@ -82,8 +91,16 @@ namespace SmartBandAlertV7.Pages
         async Task CompleteAdd(FriendsList item)
         {
             await App.FriendsManager.SaveTaskAsync(item, true);
-            var list = await App.FriendsManager.GetTasksAsync();
-            friendEXISTINGView.ItemsSource = list;
+            //var list = await App.FriendsManager.GetTasksAsync();
+            using (var cancelSrc = new CancellationTokenSource())
+            {
+                using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                {
+                    friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                }
+
+            }
+           
         }
 
         async void trashTapped(object sender, EventArgs args)
@@ -105,8 +122,16 @@ namespace SmartBandAlertV7.Pages
 
             //await manager.SaveTaskAsync(item);
             App.FriendsManager.DeleteTaskAsync(item);
-            var list = await App.FriendsManager.GetTasksAsync();
-            friendEXISTINGView.ItemsSource = list;
+            /*var list = await App.FriendsManager.GetTasksAsync();
+            friendEXISTINGView.ItemsSource = list;*/
+            using (var cancelSrc = new CancellationTokenSource())
+            {
+                using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                {
+                    friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                }
+            }
+
         }
 
         private async void MainSearchBar_OnSearchButtonPressed(object sender, EventArgs e)

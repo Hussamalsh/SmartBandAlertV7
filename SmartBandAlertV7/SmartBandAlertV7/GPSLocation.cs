@@ -3,7 +3,9 @@ using SmartBandAlertV7.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Maps;
 
@@ -21,7 +23,7 @@ namespace SmartBandAlertV7
          {
          }*/
         public Victim victim { set; get; } = new Victim();
-        public async void getLocationAsync()
+        public async void getLocationAsync(bool postdata)
         {
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
@@ -34,19 +36,69 @@ namespace SmartBandAlertV7
             }
 
 
+
+            App.Latitude = Latitude = position.Latitude;
+            App.Longitude = Longitude = position.Longitude;
+            TimeStamploc = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+
             Geocoder geoCoder = new Geocoder();
             var fortMasonPosition = new Position(Latitude, Longitude);
             var possibleAddresses = await geoCoder.GetAddressesForPositionAsync(fortMasonPosition);
 
             adress = possibleAddresses.FirstOrDefault();
 
+            if (postdata)
+            {
+                App.UserManager.editUserLocation(new Models.Location
+                {
+                    fbid = App.FacebookId,
+                    userName = App.FacebookName,
+                    latitude = Latitude.ToString(),
+                    longitude = Longitude.ToString(),
+                    distance = ""
+                });
+            }
 
-            Latitude  = position.Latitude;
-            Longitude = position.Longitude;
-            TimeStamploc = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
 
-            getvictimLocationAsync();
+
         }
+
+        public  IObservable<object> getUserLocation()
+        {
+            return Observable.Create<object>(async ob =>
+            {
+                var cancelSrc = new CancellationTokenSource();
+
+
+
+                var locator = CrossGeolocator.Current;
+                locator.DesiredAccuracy = 50;
+
+                var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
+
+                if (position == null)
+                {
+                    return null;
+                }
+                ob.OnNext(Latitude);
+                
+                App.Latitude = Latitude = position.Latitude;
+                App.Longitude = Longitude = position.Longitude;
+                TimeStamploc = DateTime.Parse(position.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+
+
+
+                ob.OnCompleted();
+                
+
+                return () =>
+                {
+                    //connected?.Dispose();
+                    cancelSrc.Dispose();
+                };
+            });
+        }
+
 
         public void getvictimLocationAsync()
         {

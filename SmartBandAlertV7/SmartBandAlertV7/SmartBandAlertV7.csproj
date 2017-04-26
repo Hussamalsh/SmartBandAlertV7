@@ -84,6 +84,9 @@
     <Compile Include="Pages\MasterPage.xaml.cs">
       <DependentUpon>MasterPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\NearByUsers.xaml.cs">
+      <DependentUpon>NearByUsers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Om.xaml.cs">
       <DependentUpon>Om.xaml</DependentUpon>
     </Compile>
@@ -241,6 +244,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\LogoutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\NearByUsers.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

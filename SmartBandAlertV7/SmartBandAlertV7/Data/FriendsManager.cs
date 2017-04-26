@@ -14,7 +14,7 @@ namespace SmartBandAlertV7.Data
         {
             restService = service;
         }
-        public Task<List<FriendsList>> GetTasksAsync()
+        public IObservable <FriendsList[]> GetTasksAsync()
         {
             return restService.RefreshDataAsyncFriends();
         }

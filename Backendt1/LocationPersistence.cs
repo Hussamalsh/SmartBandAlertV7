@@ -21,7 +21,8 @@ namespace Backendt1
                 conn.ConnectionString = myConnectionString;
                 conn.Open();
                 String sqlString = "INSERT INTO location (fbid, name, latitude, longitude)"
-                    + "VALUES(" + locationToSave.FBID + ",'" + locationToSave.UserName + "','" + locationToSave.Latitude + "','" + locationToSave.Longitude + "');";
+                    + "VALUES(" + locationToSave.FBID + ",'" + locationToSave.UserName + "','" 
+                    + locationToSave.Latitude.ToString().Replace(",", ".") + "','" + locationToSave.Longitude.ToString().Replace(",", ".") + "');";
 
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
                 cmd.ExecuteNonQuery();
@@ -50,8 +51,8 @@ namespace Backendt1
                 conn.ConnectionString = myConnectionString;
                 conn.Open();
 
-                String sqlString = "UPDATE location SET latitude="+ userlocObj.Latitude +
-                                                     ",longitude="+userlocObj.Longitude+
+                String sqlString = "UPDATE location SET latitude="+ userlocObj.Latitude.ToString().Replace(",", ".") +
+                                                     ",longitude="+userlocObj.Longitude.ToString().Replace(",", ".") +
                                                      "WHERE fbid="+userlocObj.FBID;
 
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
@@ -91,7 +92,7 @@ namespace Backendt1
                 String sqlstring1 = "select * from(SELECT name,latitude,longitude,round((((acos(sin(("+latitude+
                     "*pi()/180)) *sin((`latitude`*pi()/180))+cos(("+latitude+
                     "*pi()/180)) * cos((`latitude`*pi()/180)) *cos((("+longitude+
-                    "- `longitude`)*pi()/180))))*180/pi())*60*1.1515*1.609344),1) as distance FROM location) as temp order by distance";
+                    "- `longitude`)*pi()/180))))*180/pi())*60*1.1515*1.609344),1) as distance FROM location) as temp where distance <50";
 
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlstring1, conn);
 

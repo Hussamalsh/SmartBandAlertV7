@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using SmartBandAlertV7.Models;
 using System.Net.Http.Headers;
+using System.Reactive.Linq;
+using System.Threading;
 
 namespace SmartBandAlertV7.Data
 {
@@ -38,12 +40,21 @@ namespace SmartBandAlertV7.Data
             return users;
         }
 
-        public async Task<List<FriendsList>> RefreshDataAsyncFriends()
+        public  IObservable<FriendsList[]> RefreshDataAsyncFriends()
         {
-            // Friends = new List<FriendsList>();
-            var data = client.GetStringAsync("http://sbat1.azurewebsites.net/api/friends/" + App.FacebookId).Result;
-            var friends = JsonConvert.DeserializeObject<List<FriendsList>>(data);
-            return friends;
+            return Observable.Create<FriendsList[]>(ob =>
+            {
+                var cancelSrc = new CancellationTokenSource();
+                var data = client.GetStringAsync("http://sbat1.azurewebsites.net/api/friends/" + App.FacebookId).Result;
+                var friends = JsonConvert.DeserializeObject<List<FriendsList>>(data);
+                ob.OnNext(friends.ToArray());
+                ob.OnCompleted();
+                return () =>
+                {
+                    //connected?.Dispose();
+                    cancelSrc.Dispose();
+                };
+            });
         }
 
         public async Task SaveTodoItemAsync(User item, bool isNewItem = false)
@@ -120,20 +131,68 @@ namespace SmartBandAlertV7.Data
             }
         }
 
-        public void SaveUserLocationAsync(Location userloc)
+        public IObservable<Location[]> SaveUserLocationAsync()
         {
-           var obj = JsonConvert.SerializeObject(userloc, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-           var request = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/location/");
-           request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
-           var data = client.SendAsync(request).Result;
+            return Observable.Create<Location[]>(ob =>
+            {
+                var cancelSrc = new CancellationTokenSource();
+
+
+                var data = client.GetStringAsync("https://sbat1.azurewebsites.net/api/location?latitude="
+                                           + App.Latitude + "&longitude=" + App.Longitude).Result;
+                var list = JsonConvert.DeserializeObject<List<Location>>(data);
+
+                ob.OnNext(list.ToArray());
+                ob.OnCompleted();
+
+                return () =>
+                {
+                    //connected?.Dispose();
+
+                    cancelSrc.Dispose();
+                };
+            });
         }
 
-        public void editUserLocationAsync(Location userloc)
+        public IObservable<Location[]> test()
+        {
+            return Observable.Create<Location[]>(ob =>
+            {
+                var cancelSrc = new CancellationTokenSource();
+
+
+                var data = client.GetStringAsync("https://sbat1.azurewebsites.net/api/location?latitude="
+                                           + App.Latitude + "&longitude=" + App.Longitude).Result;
+                var list = JsonConvert.DeserializeObject<List<Location>>(data);
+
+                ob.OnNext(list.ToArray());
+                ob.OnCompleted();
+
+                return () =>
+                {
+                    //connected?.Dispose();
+                    
+                    cancelSrc.Dispose();
+                };
+            });
+
+
+
+        }
+
+
+        public async void editUserLocationAsync(Location userloc)
         {
             var obj = JsonConvert.SerializeObject(userloc, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-            var request = new HttpRequestMessage(HttpMethod.Put, "https://sbat1.azurewebsites.net/api/location/");
+            var request1 = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/Location");
+            request1.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+            var data = client.SendAsync(request1).Result;
+
+            var request = new HttpRequestMessage(HttpMethod.Put, "https://sbat1.azurewebsites.net/api/Location");
             request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
-            var data = client.SendAsync(request).Result;
+            //data = client.SendAsync(request).Result;
+            var response1 =  await client.PutAsync("https://sbat1.azurewebsites.net/api/Location", request.Content);
+
         }
 
         public void ActivateDangerMode(Victim item, bool isNewItem)
