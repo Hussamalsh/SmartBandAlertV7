@@ -31,6 +31,8 @@ namespace SmartBandAlertV7.Pages
             friendSEARCHView.ItemSelected += (sender, e) => friendSEARCHView.SelectedItem = null;
 
 
+            friendEXISTINGView.ItemsSource = new string[] { "Loading friends", "Loading friends", "Loading friends", "Loading friends" };
+
         }
 
 
@@ -39,8 +41,23 @@ namespace SmartBandAlertV7.Pages
 
             base.OnAppearing();
             //var list = await App.UserManager.GetTasksAsync();
-            //friendEXISTINGView.ItemsSource = new string[] { "Loading friends", "Loading friends", "Loading friends", "Loading friends" };
+            friendEXISTINGView.ItemsSource = new string[] { "Loading friends", "Loading friends", "Loading friends", "Loading friends" };
 
+            using (var cancelSrc = new CancellationTokenSource())
+            {
+                using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                {
+                    while (dlg.PercentComplete < 100)
+                    {
+                       
+                        await Task.Delay(TimeSpan.FromSeconds(1));
+                        if (dlg.PercentComplete == 0)
+                            friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                        dlg.PercentComplete += 20;
+                    }
+                }
+            }
+/*
             using (var cancelSrc = new CancellationTokenSource())
             {
                 using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
@@ -48,7 +65,8 @@ namespace SmartBandAlertV7.Pages
                     friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
                 }
 
-            }
+            }*/
+
 
         }
 

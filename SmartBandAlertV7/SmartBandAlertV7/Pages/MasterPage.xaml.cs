@@ -29,7 +29,7 @@ namespace SmartBandAlertV7.Pages
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "Hem",
-                IconSource = "hem.png",
+                IconSource = "ic_home_black_24dp.png",
                 TargetType = typeof(HemPage)
             });
 
@@ -50,7 +50,7 @@ namespace SmartBandAlertV7.Pages
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "NearByUsers",
-                IconSource = "om.png",
+                IconSource = "ic_near_me_black_24dp.png",
                 TargetType = typeof(NearByUsers)
             });
 
@@ -65,7 +65,7 @@ namespace SmartBandAlertV7.Pages
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "Hjälp",
-                IconSource = "hjalp.png",
+                IconSource = "ic_help_black_24dp.png",
                 TargetType = typeof(Hjalp)
 
             });
@@ -80,7 +80,7 @@ namespace SmartBandAlertV7.Pages
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "LogOut",
-                IconSource = "om.png",
+                IconSource = "ic_exit_to_app_black_24dp.png",
                 TargetType = typeof(LogoutPage)
             });
 
