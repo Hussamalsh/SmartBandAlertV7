@@ -25,8 +25,8 @@ namespace SmartBandAlertV7.Pages
 
             /*GPSLocation gpsloc = new GPSLocation();
             gpsloc.getLocationAsync(false);*/
-
-             map = new Map()
+            
+            map = new Map(MapSpan.FromCenterAndRadius(new Position(56.6713889, 12.8555556), Distance.FromKilometers(20)))
             {
                 IsShowingUser = true,
                 HeightRequest = 100,
@@ -77,7 +77,7 @@ namespace SmartBandAlertV7.Pages
 
             }*/
 
-            map = new Map(MapSpan.FromCenterAndRadius(new Position(App.Latitude, App.Longitude), Distance.FromKilometers(60)))
+            map = new Map(MapSpan.FromCenterAndRadius(new Position(App.Latitude, App.Longitude), Distance.FromKilometers(20)))
             {
                 IsShowingUser = true,
                 HeightRequest = 100,

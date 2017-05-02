@@ -41,8 +41,6 @@ namespace SmartBandAlertV7.Pages
 
             base.OnAppearing();
             //var list = await App.UserManager.GetTasksAsync();
-            friendEXISTINGView.ItemsSource = new string[] { "Loading friends", "Loading friends", "Loading friends", "Loading friends" };
-
             using (var cancelSrc = new CancellationTokenSource())
             {
                 using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Cancel"))
@@ -50,7 +48,7 @@ namespace SmartBandAlertV7.Pages
                     while (dlg.PercentComplete < 100)
                     {
                        
-                        await Task.Delay(TimeSpan.FromSeconds(1));
+                        await Task.Delay(500);
                         if (dlg.PercentComplete == 0)
                             friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
                         dlg.PercentComplete += 20;
@@ -93,7 +91,7 @@ namespace SmartBandAlertV7.Pages
         async void checkTapped(object sender, EventArgs args)
         {
 
-            var answer = await DisplayAlert("Beskyddare", "Vill du lägga till den här beskyddaren?", "Nej", "Ja");
+            var answer = await DisplayAlert("Beskyddare", "Vill du lägga till den här beskyddaren?", "Ja", "Nej");
 
             if (answer)
             {

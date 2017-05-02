@@ -67,6 +67,8 @@ namespace SmartBandAlertV7.Droid
 			global::Splat.Resource.String.library_name = global::SmartBandAlertV7.Droid.Resource.String.library_name;
 			global::Xamarin.Auth.Resource.Id.webview = global::SmartBandAlertV7.Droid.Resource.Id.webview;
 			global::Xamarin.Auth.Resource.Layout.activity_webview = global::SmartBandAlertV7.Droid.Resource.Layout.activity_webview;
+			global::Xamarin.Auth.Resource.String.ApplicationName = global::SmartBandAlertV7.Droid.Resource.String.ApplicationName;
+			global::Xamarin.Auth.Resource.String.Hello = global::SmartBandAlertV7.Droid.Resource.String.Hello;
 			global::Xamarin.Auth.Resource.String.library_name = global::SmartBandAlertV7.Droid.Resource.String.library_name;
 			global::Xamarin.Auth.Resource.String.title_activity_webview = global::SmartBandAlertV7.Droid.Resource.String.title_activity_webview;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::SmartBandAlertV7.Droid.Resource.Attribute.actionBarSize;
@@ -1239,32 +1241,32 @@ namespace SmartBandAlertV7.Droid
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f090059
-			public const int abc_background_cache_hint_selector_material_dark = 2131296345;
+			// aapt resource value: 0x7f09005e
+			public const int abc_background_cache_hint_selector_material_dark = 2131296350;
 			
-			// aapt resource value: 0x7f09005a
-			public const int abc_background_cache_hint_selector_material_light = 2131296346;
+			// aapt resource value: 0x7f09005f
+			public const int abc_background_cache_hint_selector_material_light = 2131296351;
 			
-			// aapt resource value: 0x7f09005b
-			public const int abc_color_highlight_material = 2131296347;
+			// aapt resource value: 0x7f090060
+			public const int abc_color_highlight_material = 2131296352;
 			
 			// aapt resource value: 0x7f090015
 			public const int abc_input_method_navigation_guard = 2131296277;
 			
-			// aapt resource value: 0x7f09005c
-			public const int abc_primary_text_disable_only_material_dark = 2131296348;
+			// aapt resource value: 0x7f090061
+			public const int abc_primary_text_disable_only_material_dark = 2131296353;
 			
-			// aapt resource value: 0x7f09005d
-			public const int abc_primary_text_disable_only_material_light = 2131296349;
+			// aapt resource value: 0x7f090062
+			public const int abc_primary_text_disable_only_material_light = 2131296354;
 			
-			// aapt resource value: 0x7f09005e
-			public const int abc_primary_text_material_dark = 2131296350;
+			// aapt resource value: 0x7f090063
+			public const int abc_primary_text_material_dark = 2131296355;
 			
-			// aapt resource value: 0x7f09005f
-			public const int abc_primary_text_material_light = 2131296351;
+			// aapt resource value: 0x7f090064
+			public const int abc_primary_text_material_light = 2131296356;
 			
-			// aapt resource value: 0x7f090060
-			public const int abc_search_url_text = 2131296352;
+			// aapt resource value: 0x7f090065
+			public const int abc_search_url_text = 2131296357;
 			
 			// aapt resource value: 0x7f090016
 			public const int abc_search_url_text_normal = 2131296278;
@@ -1275,11 +1277,14 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f090018
 			public const int abc_search_url_text_selected = 2131296280;
 			
-			// aapt resource value: 0x7f090061
-			public const int abc_secondary_text_material_dark = 2131296353;
+			// aapt resource value: 0x7f090066
+			public const int abc_secondary_text_material_dark = 2131296358;
 			
-			// aapt resource value: 0x7f090062
-			public const int abc_secondary_text_material_light = 2131296354;
+			// aapt resource value: 0x7f090067
+			public const int abc_secondary_text_material_light = 2131296359;
+			
+			// aapt resource value: 0x7f09005b
+			public const int accent = 2131296347;
 			
 			// aapt resource value: 0x7f090019
 			public const int accent_material_dark = 2131296281;
@@ -1338,8 +1343,8 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f090008
 			public const int common_action_bar_splitter = 2131296264;
 			
-			// aapt resource value: 0x7f090063
-			public const int common_google_signin_btn_text_dark = 2131296355;
+			// aapt resource value: 0x7f090068
+			public const int common_google_signin_btn_text_dark = 2131296360;
 			
 			// aapt resource value: 0x7f090009
 			public const int common_google_signin_btn_text_dark_default = 2131296265;
@@ -1353,8 +1358,8 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f09000a
 			public const int common_google_signin_btn_text_dark_pressed = 2131296266;
 			
-			// aapt resource value: 0x7f090064
-			public const int common_google_signin_btn_text_light = 2131296356;
+			// aapt resource value: 0x7f090069
+			public const int common_google_signin_btn_text_light = 2131296361;
 			
 			// aapt resource value: 0x7f09000d
 			public const int common_google_signin_btn_text_light_default = 2131296269;
@@ -1368,8 +1373,8 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f09000e
 			public const int common_google_signin_btn_text_light_pressed = 2131296270;
 			
-			// aapt resource value: 0x7f090065
-			public const int common_plus_signin_btn_text_dark = 2131296357;
+			// aapt resource value: 0x7f09006a
+			public const int common_plus_signin_btn_text_dark = 2131296362;
 			
 			// aapt resource value: 0x7f090000
 			public const int common_plus_signin_btn_text_dark_default = 2131296256;
@@ -1383,8 +1388,8 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f090001
 			public const int common_plus_signin_btn_text_dark_pressed = 2131296257;
 			
-			// aapt resource value: 0x7f090066
-			public const int common_plus_signin_btn_text_light = 2131296358;
+			// aapt resource value: 0x7f09006b
+			public const int common_plus_signin_btn_text_light = 2131296363;
 			
 			// aapt resource value: 0x7f090004
 			public const int common_plus_signin_btn_text_light_default = 2131296260;
@@ -1494,6 +1499,12 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f09003c
 			public const int material_grey_900 = 2131296316;
 			
+			// aapt resource value: 0x7f090059
+			public const int primary = 2131296345;
+			
+			// aapt resource value: 0x7f09005a
+			public const int primaryDark = 2131296346;
+			
 			// aapt resource value: 0x7f09003d
 			public const int primary_dark_material_dark = 2131296317;
 			
@@ -1536,23 +1547,29 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f09004a
 			public const int secondary_text_disabled_material_light = 2131296330;
 			
+			// aapt resource value: 0x7f09005d
+			public const int splash_background = 2131296349;
+			
 			// aapt resource value: 0x7f09004b
 			public const int switch_thumb_disabled_material_dark = 2131296331;
 			
 			// aapt resource value: 0x7f09004c
 			public const int switch_thumb_disabled_material_light = 2131296332;
 			
-			// aapt resource value: 0x7f090067
-			public const int switch_thumb_material_dark = 2131296359;
+			// aapt resource value: 0x7f09006c
+			public const int switch_thumb_material_dark = 2131296364;
 			
-			// aapt resource value: 0x7f090068
-			public const int switch_thumb_material_light = 2131296360;
+			// aapt resource value: 0x7f09006d
+			public const int switch_thumb_material_light = 2131296365;
 			
 			// aapt resource value: 0x7f09004d
 			public const int switch_thumb_normal_material_dark = 2131296333;
 			
 			// aapt resource value: 0x7f09004e
 			public const int switch_thumb_normal_material_light = 2131296334;
+			
+			// aapt resource value: 0x7f09005c
+			public const int window_background = 2131296348;
 			
 			static Color()
 			{
@@ -2579,8 +2596,8 @@ namespace SmartBandAlertV7.Droid
 			// aapt resource value: 0x7f0200d8
 			public const int mr_ic_play_light = 2130837720;
 			
-			// aapt resource value: 0x7f0200df
-			public const int notification_template_icon_bg = 2130837727;
+			// aapt resource value: 0x7f0200e1
+			public const int notification_template_icon_bg = 2130837729;
 			
 			// aapt resource value: 0x7f0200d9
 			public const int om = 2130837721;
@@ -2598,7 +2615,13 @@ namespace SmartBandAlertV7.Droid
 			public const int sbalogo = 2130837725;
 			
 			// aapt resource value: 0x7f0200de
-			public const int trash = 2130837726;
+			public const int splash_logo = 2130837726;
+			
+			// aapt resource value: 0x7f0200df
+			public const int splash_screen = 2130837727;
+			
+			// aapt resource value: 0x7f0200e0
+			public const int trash = 2130837728;
 			
 			static Drawable()
 			{
@@ -3413,6 +3436,12 @@ namespace SmartBandAlertV7.Droid
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f070048
+			public const int ApplicationName = 2131165256;
+			
+			// aapt resource value: 0x7f070047
+			public const int Hello = 2131165255;
+			
 			// aapt resource value: 0x7f07002e
 			public const int abc_action_bar_home_description = 2131165230;
 			
@@ -4175,6 +4204,12 @@ namespace SmartBandAlertV7.Droid
 			
 			// aapt resource value: 0x7f0c0050
 			public const int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = 2131492944;
+			
+			// aapt resource value: 0x7f0c0175
+			public const int SplashTheme = 2131493237;
+			
+			// aapt resource value: 0x7f0c0176
+			public const int SplashTheme_Base = 2131493238;
 			
 			// aapt resource value: 0x7f0c00d1
 			public const int TextAppearance_AppCompat = 2131493073;

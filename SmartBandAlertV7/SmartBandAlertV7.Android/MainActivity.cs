@@ -21,7 +21,9 @@ using Plugin.Permissions;
 
 namespace SmartBandAlertV7.Droid
 {
-    [Activity(Label = "SmartBandAlertV7", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(/*Label = "SmartBandAlertV7",*/ Icon = "@drawable/icon", Theme = "@style/SplashTheme"
+        /*Theme = "@style/MyTheme.Splash" "@style/MainTheme"*/, MainLauncher = true,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IAuthenticate
     {
         public static MediaPlayer _player;

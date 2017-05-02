@@ -26,6 +26,36 @@ using System.Net.Http.Headers;
 
 namespace SmartBandAlertV7.Droid.Renderers
 {
+    [JsonObject]
+    public class UserM
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("verified_email")]
+        public bool VerifiedEmail { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("given_name")]
+        public string GivenName { get; set; }
+
+        [JsonProperty("family_name")]
+        public string FamilyName { get; set; }
+
+        [JsonProperty("link")]
+        public string Link { get; set; }
+
+        [JsonProperty("picture")]
+        public string Picture { get; set; }
+
+        [JsonProperty("gender")]
+        public string Gender { get; set; }
+    }
     public class FBLoginPageRenderer : PageRenderer
     {
 
@@ -108,24 +138,32 @@ namespace SmartBandAlertV7.Droid.Renderers
                     else
                     {
                         string url1 = "https://www.googleapis.com/oauth2/v2/userinfo";
-                        string url2 = "https://www.googleapis.com/plus/v1/people/me/openIdConnect";
                         var request = new OAuth2Request("GET", new Uri(url1), null, eargs.Account);
-                        var result = await request.GetResponseAsync();
+                        var response = await request.GetResponseAsync();
+                        if (response != null)
+                        {
 
-                        string resultText = result.GetResponseText();
-                        var obj = JsonValue.Parse(resultText);
+                            HttpClient client1 = new HttpClient();
+                            client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            client1.MaxResponseContentBufferSize = 256000;
 
-                        /*string username = (string)obj["name"];
-                        string email = (string)obj["email"];*/
+                            //var data = client.SendAsync(request).Result;
+                            string url = response.ResponseUri.ToString();
+                            var data = client1.GetStringAsync(url).Result;
+
+                            //var obj = JsonValue.Parse(data);
+                            var obj= JsonConvert.DeserializeObject<UserM>(data);
+
+                            App.FacebookId = obj.Id;
+                            App.FacebookName = obj.Name;
+                            App.EmailAddress = obj.Email;
+                            App.ProfilePic = obj.Picture;
+                            //
+                            saveset(obj.Id, obj.Name);
+                        }
 
 
 
-                        App.FacebookId = obj["sub"];
-                        App.FacebookName = obj["name"];
-                        App.EmailAddress = obj["email"];
-                        App.ProfilePic = obj["picture"];
-                        //
-                        saveset(obj["id"], obj["name"]);
 
                     }
 
