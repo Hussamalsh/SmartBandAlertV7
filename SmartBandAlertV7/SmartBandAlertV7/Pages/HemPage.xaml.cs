@@ -73,6 +73,7 @@ namespace SmartBandAlertV7.Pages
                 }
                 else
                     await DisplayAlert("Fel ", "Anslut till en enhet först.", "Ok");
+                Task.Delay(500);
             };
 
             stopDanger.Clicked += (s, e) => {
