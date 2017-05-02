@@ -49,14 +49,14 @@ namespace SmartBandAlertV7.Pages
 
             masterPageItems.Add(new MasterPageItem
             {
-                Title = "NearByUsers",
+                Title = "Användare i närheten",
                 IconSource = "ic_near_me_black_24dp.png",
                 TargetType = typeof(NearByUsers)
             });
 
             masterPageItems.Add(new MasterPageItem
             {
-                Title = "TestAlarm",
+                Title = "Testalarm",
                 IconSource = "hjalp.png",
                 TargetType = typeof(TestAlarmPage)
 
@@ -79,7 +79,7 @@ namespace SmartBandAlertV7.Pages
             
             masterPageItems.Add(new MasterPageItem
             {
-                Title = "LogOut",
+                Title = "Logga ut",
                 IconSource = "ic_exit_to_app_black_24dp.png",
                 TargetType = typeof(LogoutPage)
             });

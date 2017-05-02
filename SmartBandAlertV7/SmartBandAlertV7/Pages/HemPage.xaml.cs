@@ -50,10 +50,10 @@ namespace SmartBandAlertV7.Pages
             startDanger.BindingContext = new { w0 = App.ScreenWidth * 160 / (App.ScreenDPI), bgc1 = Color.FromHex("#ededed") };
 
             //Battery 
-            progBar.BindingContext = new { w4 = App.ScreenWidth * 160 / (App.ScreenDPI * 3), theprog = 0.5 };
+            progBar.BindingContext = new { w4 = App.ScreenWidth * 160 / (App.ScreenDPI * 3), theprog = 1 };
             progBar.Scale = 1;
             batterystack.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            progBarText.BindingContext = new { theprogtext = "50%" };
+            progBarText.BindingContext = new { theprogtext = "?%" };
             checkBattery.BindingContext = new { bgc3 = Color.White };
 
             startDanger.Clicked += async (s, e) =>
@@ -72,7 +72,7 @@ namespace SmartBandAlertV7.Pages
 
                 }
                 else
-                    await DisplayAlert("Wrong ", "Conect to a device first", "Ok");
+                    await DisplayAlert("Fel ", "Anslut till en enhet först.", "Ok");
             };
 
             stopDanger.Clicked += (s, e) => {
@@ -131,13 +131,13 @@ namespace SmartBandAlertV7.Pages
                 bleACRProfileManager.bleprofile.BleAdapter.WhenScanningStatusChanged().Subscribe(on =>
                 {
                     this.IsScanning = on;
-                    this.ScanText.Text = on ? "Stop Scan" : "Scan";
+                    this.ScanText.Text = on ? "Stoppa" : "Skanna";
                 });
    
                 
             }
             else
-                await DisplayAlert("Error: Bluetooth is off?", "Turn on the Bluetooth?", "OK");
+                await DisplayAlert("Bluetooth är avstängt", "Var vänlig starta bluetooth.", "Ok");
         }
 
         public async void Button_OnClickedScanToggle(object sender, EventArgs e)
@@ -151,7 +151,7 @@ namespace SmartBandAlertV7.Pages
                 else
                 {
                     bleACRProfileManager.bleprofile.Devices.Clear();
-                    this.ScanText.Text = "Stop Scan";
+                    this.ScanText.Text = "Stoppa";
 
                     this.scan = bleACRProfileManager.bleprofile.BleAdapter
                         .Scan()
@@ -159,7 +159,7 @@ namespace SmartBandAlertV7.Pages
                 }
             }
             else
-                await DisplayAlert("Error: Bluetooth is off?", "Turn on the Bluetooth?", "OK");
+                await DisplayAlert("Bluetooth är avstängt", "Var vänlig starta bluetooth.", "Ok");
 
         }
 
@@ -205,7 +205,7 @@ namespace SmartBandAlertV7.Pages
                 }
             }
             else
-                await DisplayAlert("Error:", "Connect to a device first", "OK");
+                await DisplayAlert("Fel ", "Anslut till en enhet först.", "Ok");
 
         }
 
@@ -226,12 +226,12 @@ namespace SmartBandAlertV7.Pages
                 // don't cleanup connection - force user to d/c
                 if (this.device.Status == ConnectionStatus.Disconnected)
                 {
-                    answer = await DisplayAlert("Beskyddare", "Vill du ansluta till den här bluetooth enheten?", "Ja", "Nej");
+                    answer = await DisplayAlert("Bluetooth", "Vill du ansluta till den här bluetooth enheten?", "Ja", "Nej");
                     if (answer == true)
                     {
                         using (var cancelSrc = new CancellationTokenSource())
                         {
-                            using (UserDialogs.Instance.Loading("Connecting", cancelSrc.Cancel, "Cancel"))
+                            using (UserDialogs.Instance.Loading("Ansluter", cancelSrc.Cancel, "Avbryt"))
                             {
                                 await this.device.Connect().ToTask(cancelSrc.Token);
                             }
@@ -246,7 +246,7 @@ namespace SmartBandAlertV7.Pages
                 }
                 else
                 {
-                    answer = await DisplayAlert("Beskyddare", "Vill du avsluta till den här bluetooth enheten?", "Ja", "Nej");
+                    answer = await DisplayAlert("Bluetooth", "Vill du avbryta anslutningen?", "Ja", "Nej");
                     if (answer == true)
                     {
                         this.device.CancelConnection();
@@ -355,7 +355,7 @@ namespace SmartBandAlertV7.Pages
                             this.Value = tempval;
                         int nr = int.Parse(Value);
                         if (nr > 107)
-                            await DisplayAlert("Charging:", " The Battery is on Charge", "OK");
+                            await DisplayAlert("Laddar:", " Batteriet laddar.", "OK");
                         else
                         {
                             double resultlvl = (((double)nr / 107) * 100);

@@ -9,6 +9,7 @@ using SmartBandAlertV7.Models;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
 using System.Threading;
+using System.IO;
 
 namespace SmartBandAlertV7.Data
 {
@@ -137,10 +138,15 @@ namespace SmartBandAlertV7.Data
             {
                 var cancelSrc = new CancellationTokenSource();
 
-
+                var lat = App.Latitude.ToString();
+                var lon = App.Longitude.ToString();
+                lat = lat.Replace(',', '.');
+                lon = lon.Replace(',', '.');
                 var data = client.GetStringAsync("https://sbat1.azurewebsites.net/api/location?latitude="
-                                           + App.Latitude + "&longitude=" + App.Longitude).Result;
-                var list = JsonConvert.DeserializeObject<List<Location>>(data);
+                                           + lat + "&longitude=" + lon);
+                
+                var list = JsonConvert.DeserializeObject<List<Location>>(data.Result);
+                
 
                 ob.OnNext(list.ToArray());
                 ob.OnCompleted();

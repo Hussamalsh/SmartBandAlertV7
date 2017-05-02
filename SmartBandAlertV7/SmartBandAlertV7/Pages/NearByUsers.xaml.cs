@@ -55,7 +55,7 @@ namespace SmartBandAlertV7.Pages
                     //await App.UserManager.testone().ToTask(cancelSrc.Token);
                     
 
-                    using (UserDialogs.Instance.Loading("Hämtar plats data", cancelSrc.Cancel, "Cancel"))
+                    using (UserDialogs.Instance.Loading("Hämtar platsdata", cancelSrc.Cancel, "Avbryt"))
                     {
                         GPSLocation gpsloc = new GPSLocation();
                         await gpsloc.getUserLocation().ToTask(cancelSrc1.Token);
@@ -70,7 +70,7 @@ namespace SmartBandAlertV7.Pages
             /*
             using (var cancelSrc1 = new CancellationTokenSource())
             {
-                using (UserDialogs.Instance.Loading("Hämtar plats data", cancelSrc1.Cancel, "Cancel"))
+                using (UserDialogs.Instance.Loading("Hämtar platsdata", cancelSrc1.Cancel, "Avbryt"))
                 {
                      list = await App.UserManager.testone().ToTask(cancelSrc1.Token);
                 }

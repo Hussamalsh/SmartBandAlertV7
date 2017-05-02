@@ -43,7 +43,7 @@ namespace SmartBandAlertV7.Pages
             //var list = await App.UserManager.GetTasksAsync();
             using (var cancelSrc = new CancellationTokenSource())
             {
-                using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Avbryt"))
                 {
                     while (dlg.PercentComplete < 100)
                     {
