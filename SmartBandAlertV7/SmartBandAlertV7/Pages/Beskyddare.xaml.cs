@@ -50,7 +50,10 @@ namespace SmartBandAlertV7.Pages
                        
                         await Task.Delay(500);
                         if (dlg.PercentComplete == 0)
+                        {
+                            dlg.PercentComplete += 20;
                             friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                        }
                         dlg.PercentComplete += 20;
                     }
                 }

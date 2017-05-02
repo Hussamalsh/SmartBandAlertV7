@@ -59,7 +59,7 @@ namespace SmartBandAlertV7.Pages
                     {
                         GPSLocation gpsloc = new GPSLocation();
                         await gpsloc.getUserLocation().ToTask(cancelSrc1.Token);
-
+                        //Task.Delay(6000);
                         list = await App.UserManager.saveUserLocation().ToTask(cancelSrc.Token);
                     }
 

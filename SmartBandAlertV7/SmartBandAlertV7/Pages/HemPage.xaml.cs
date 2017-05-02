@@ -388,6 +388,7 @@ namespace SmartBandAlertV7.Pages
                 {
                     // Do something
                     postonce = false;
+                    App.VictimManager.setDM(victim, false);
                     return false; // True = Repeat again, False = Stop the timer
                 });
 
@@ -450,12 +451,12 @@ namespace SmartBandAlertV7.Pages
                 Task.Run(async () => uppdateLiveValueAsync());
             }
 
-            if (p == 2)
+            if (p == 2)//Send alarm
             {
                 await App.VictimManager.SaveTaskAsync(victim, true);
             }
 
-            if (p == 11)
+            if (p == 11) // Set active mode to false and stop it.
             {
                 App.VictimManager.setDM(victim, false);
             }
