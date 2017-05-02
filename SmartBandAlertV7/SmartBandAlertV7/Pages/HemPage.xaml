@@ -21,7 +21,7 @@
             <Label x:Name="progBarText" VerticalTextAlignment="Center" Text="{Binding theprogtext}" FontSize="18"></Label>
             <Button BackgroundColor="{Binding bgc3}" x:Name="checkBattery" Text="Uppdatera" Clicked="Button_OnClickedBatteriUppdat"></Button>
         </StackLayout>
-        <Label Text="Smartband Enheten:" TextColor="Black" VerticalTextAlignment="Center" FontSize="Large"></Label>
+        <Label Text="Bluetooth enheter:" TextColor="Black" VerticalTextAlignment="Center" FontSize="Large"></Label>
         <ListView x:Name="theBTunits" CachingStrategy="RecycleElement" RowHeight="55" ItemsSource="{Binding Devices}">
             <ListView.ItemTemplate>
                 <DataTemplate>
