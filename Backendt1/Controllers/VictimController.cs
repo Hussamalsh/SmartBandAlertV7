@@ -77,13 +77,15 @@ namespace Backendt1.Controllers
                         break;
                     case "gcm":
                         // Android
-                        //value.UserName + " Need Help from you. The User ID =" + value.FBID
-                        var notif = "{ \"data\" : {\"message\":\"" + "From "+value.UserName + " Need Help from you. The User ID =" + value.FBID + "\"}}";
+                        //{"data":{"message":"From Hussi Need Help from you. The User ID =[132569873917640] [56.6642811] [12.8778527]"}}
+                        var notif = "{ \"data\" : {\"message\":\"" + "From "+value.UserName + " Need Help from you. The User ID =["+ value.FBID 
+                                        + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
                         outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif,f.FriendFBID+ "T");
 
                         if (firsttime)
                         {
-                            notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =" + value.FBID + "\"}}";
+                            notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =[" + value.FBID
+                                        + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
                             outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, value.FBID + "T");
                             firsttime = false;
                         }

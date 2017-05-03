@@ -14,12 +14,27 @@ namespace SmartBandAlertV7.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapNavigationPage : ContentPage
     {
-        public Victim v = new Victim();
+        //public Victim v = new Victim();
 
-        public MapNavigationPage(string victimId)
+        public static double Latitude
+        {
+            get;
+            set;
+        }
+
+        public static double Longitude
+        {
+            get;
+            set;
+        }
+
+        public MapNavigationPage(double lat, double longi)
         {
             InitializeComponent();
-            getVictim(victimId);
+
+            Latitude = lat;
+            Longitude = longi;
+            getVictim();
         }
 
         void OnNavigateButtonClicked(object sender, EventArgs e)
@@ -45,11 +60,12 @@ namespace SmartBandAlertV7.Pages
                 }
             }
         }
-        public async void getVictim(string victimId)
+        public async void getVictim()
         {
-            var v1 = App.VictimManager.SearchVictimAsync(victimId);
-            v = v1.Result;
-            inputEntry.Text = v.Latitude.ToString().Replace(",", ".") + "," + v.Longitude.ToString().Replace(",", ".");
+            //var v1 = App.VictimManager.SearchVictimAsync(victimId);
+           // v = v1.Result;
+
+            inputEntry.Text = Latitude.ToString().Replace(",", ".") + "," + Longitude.ToString().Replace(",", ".");
 
             if (!string.IsNullOrWhiteSpace(inputEntry.Text))
             {
@@ -62,8 +78,7 @@ namespace SmartBandAlertV7.Pages
                         break;
                     case TargetPlatform.Android:
                         Device.OpenUri(
-                            new Uri(string.Format("geo:0,0?q={0}", WebUtility.UrlEncode(v.Latitude.ToString().Replace(",", ".")
-                                                                                            + "," + v.Longitude.ToString().Replace(",", ".")))));
+                            new Uri(string.Format("geo:0,0?q={0}", WebUtility.UrlEncode(address))));
                         break;
                     case TargetPlatform.Windows:
                     case TargetPlatform.WinPhone:

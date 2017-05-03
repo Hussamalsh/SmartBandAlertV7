@@ -8,7 +8,7 @@
              
              >
 
-    <StackLayout VerticalOptions="Center">
+    <StackLayout VerticalOptions="End">
 
         <Button Text="FaceBook"
             Clicked="OnLoginButtonClicked"

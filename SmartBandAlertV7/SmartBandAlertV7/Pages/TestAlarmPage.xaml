@@ -15,7 +15,8 @@
         <Label x:Name="labelrssi"   VerticalOptions="Center" HorizontalOptions="Center"/>
 
         <StackLayout>
-            <Button Text="Send Alarm" VerticalOptions="Center" HorizontalOptions="Center" Clicked="ButtonAlarm_OnClicked"/>
+            <Button Text="Skicka Alarm"  x:Name="skickabutton"
+                    VerticalOptions="Center" HorizontalOptions="Center" Clicked="ButtonAlarm_OnClicked" IsEnabled="False"/>
 
         </StackLayout>
 

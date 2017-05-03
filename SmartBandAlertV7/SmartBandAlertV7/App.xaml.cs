@@ -79,7 +79,7 @@ namespace SmartBandAlertV7
             }
             if (NotificationOn)
             {
-                MainPage = new MapNavigationPage(VictimId);
+                MainPage = new MapNavigationPage(Latitude, Longitude);  //pass id, latitude and longitude.
                 NotificationOn = false;
             }
             else
@@ -117,12 +117,6 @@ namespace SmartBandAlertV7
         }
 
         public static bool NotificationOn
-        {
-            get;
-            set;
-        }
-
-        public static String VictimId
         {
             get;
             set;
@@ -189,6 +183,11 @@ namespace SmartBandAlertV7
         }
 
         public static double Longitude
+        {
+            get;
+            set;
+        }
+        public static String VictimId
         {
             get;
             set;

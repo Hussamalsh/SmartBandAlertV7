@@ -93,6 +93,8 @@ namespace SmartBandAlertV7.Pages
             victim.Longitude = "" + position.Longitude.ToString().ToString().Replace(",", ".");
             victim.Adress = "" + possibleAddresses.FirstOrDefault();
 
+            skickabutton.IsEnabled = true;
+
         }
 
     }

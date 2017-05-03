@@ -51,31 +51,17 @@ namespace SmartBandAlertV7.Pages
             using (var cancelSrc = new CancellationTokenSource())
             {
                 using (var cancelSrc1 = new CancellationTokenSource()/*UserDialogs.Instance.Loading("Hämtar plats data", cancelSrc.Cancel, "Cancel")*/)
-                {
-                    //await App.UserManager.testone().ToTask(cancelSrc.Token);
-                    
-
-                    using (UserDialogs.Instance.Loading("Hämtar plats data", cancelSrc.Cancel, "Cancel"))
+                {                    
+                    using (UserDialogs.Instance.Loading("Hämtar platsdata", cancelSrc.Cancel, "Avbryt"))
                     {
                         GPSLocation gpsloc = new GPSLocation();
                         await gpsloc.getUserLocation().ToTask(cancelSrc1.Token);
                         //Task.Delay(6000);
                         list = await App.UserManager.saveUserLocation().ToTask(cancelSrc.Token);
                     }
-
                 }
-               
             }
 
-            /*
-            using (var cancelSrc1 = new CancellationTokenSource())
-            {
-                using (UserDialogs.Instance.Loading("Hämtar plats data", cancelSrc1.Cancel, "Cancel"))
-                {
-                     list = await App.UserManager.testone().ToTask(cancelSrc1.Token);
-                }
-
-            }*/
 
             map = new Map(MapSpan.FromCenterAndRadius(new Position(App.Latitude, App.Longitude), Distance.FromKilometers(20)))
             {

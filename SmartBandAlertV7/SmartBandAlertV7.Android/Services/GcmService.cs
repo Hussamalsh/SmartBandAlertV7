@@ -17,6 +17,7 @@ using System.Diagnostics;
 using Android.Support.V4.App;
 using SmartBandAlertV7.Data;
 using Microsoft.WindowsAzure.MobileServices;
+using System.Text.RegularExpressions;
 
 namespace SmartBandAlertV7.Droid.Services
 {
@@ -109,7 +110,29 @@ namespace SmartBandAlertV7.Droid.Services
                 App.NotificationOn = true;
                 //string tobesearched = "ID = ";
                 if (message.Contains("ID"))
-                    App.VictimId = message.Split(new[] { "ID =" }, StringSplitOptions.None)[1];
+                {
+                   
+                    String pattern = @"\[([^\[\]]+)\]";
+                    int ctr = 0;
+                    foreach (Match m in Regex.Matches(message, pattern))
+                    {
+                        string tst = m.Groups[1].Value;
+                        if (ctr == 0)
+                            App.VictimId = tst;
+                        else if (ctr == 1)
+                            App.Latitude = Convert.ToDouble(tst);
+                        else
+                        {
+                            App.Longitude = Convert.ToDouble(tst);
+                        }
+                        ctr++;
+                    }
+
+                }
+                    /* App.VictimId = message.Split(new[] { "ID =" }, StringSplitOptions.None)[1];
+                     App.Latitude = Convert.ToDouble(message.Split(new[] { "Latitude =" }, StringSplitOptions.None)[1]);
+                     App.Longitude = Convert.ToDouble(message.Split(new[] { "Longitude =" }, StringSplitOptions.None)[1]);*/
+
                 //message.Substring(message.IndexOf(tobesearched) + tobesearched.Length);//message.("ID ="); 
                 _player = MediaPlayer.Create(this, Resource.Raw.siren2);
                 _player.Start();
