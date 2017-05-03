@@ -77,11 +77,14 @@ namespace SmartBandAlertV7.Pages
             };
 
             stopDanger.Clicked += (s, e) => {
-                App.dangerModeOn = false;
-                connectToBackend(false);
-                App.ct.Cancel();
-                var message = new StopLongRunningTaskMessage();
-                MessagingCenter.Send(message, "StopLongRunningTaskMessage");
+                if (App.dangerModeOn)
+                {
+                    App.dangerModeOn = false;
+                    connectToBackend(false);
+                    App.ct.Cancel();
+                    var message = new StopLongRunningTaskMessage();
+                    MessagingCenter.Send(message, "StopLongRunningTaskMessage");
+                }
             };
 
         }
