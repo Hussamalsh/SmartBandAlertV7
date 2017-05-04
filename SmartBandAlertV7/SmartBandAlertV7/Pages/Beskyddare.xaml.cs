@@ -41,23 +41,27 @@ namespace SmartBandAlertV7.Pages
 
             base.OnAppearing();
             //var list = await App.UserManager.GetTasksAsync();
-            using (var cancelSrc = new CancellationTokenSource())
+            try
             {
-                using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Avbryt"))
+                using (var cancelSrc = new CancellationTokenSource())
                 {
-                    while (dlg.PercentComplete < 100)
+                    using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Avbryt"))
                     {
-                       
-                        await Task.Delay(500);
-                        if (dlg.PercentComplete == 0)
+                        while (dlg.PercentComplete < 100)
                         {
+
+                            await Task.Delay(500);
+                            if (dlg.PercentComplete == 0)
+                            {
+                                dlg.PercentComplete += 20;
+                                friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                            }
                             dlg.PercentComplete += 20;
-                            friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
                         }
-                        dlg.PercentComplete += 20;
                     }
                 }
             }
+            catch (Exception) { }
 /*
             using (var cancelSrc = new CancellationTokenSource())
             {

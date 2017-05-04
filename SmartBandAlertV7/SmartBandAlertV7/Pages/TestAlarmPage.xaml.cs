@@ -26,8 +26,11 @@ namespace SmartBandAlertV7.Pages
 
         async void Button_OnClicked(object sender, EventArgs e)
         {
-            labelGPS.Text = "Getting gps";
-            await getLocationAsync();
+            try {
+                labelGPS.Text = "Getting gps";
+                await getLocationAsync();
+            }
+            catch(Exception ) { }
         }
 
         IProfileManager _profileManager;
