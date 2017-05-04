@@ -217,7 +217,7 @@ namespace SmartBandAlertV7
 
         public void sendUserLocationAsync()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(100), () =>
+            Device.StartTimer(TimeSpan.FromSeconds(35), () =>
             {
                 // Do something
                 GPSLocation gpsloc = new GPSLocation();

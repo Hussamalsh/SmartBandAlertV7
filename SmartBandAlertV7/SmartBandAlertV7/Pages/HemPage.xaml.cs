@@ -39,9 +39,6 @@ namespace SmartBandAlertV7.Pages
 
         public BLEAcrProfileManager bleACRProfileManager;
 
-        public bool IsBlueToothOn { get; set; } = App.BLEAcrProfileManager.bleprofile.IsSupported;
-        //btWarning.IsVisible = !App.BLEAcrProfileManager.bleprofile.IsSupported;  //new one
-
         public HemPage()
         {
 

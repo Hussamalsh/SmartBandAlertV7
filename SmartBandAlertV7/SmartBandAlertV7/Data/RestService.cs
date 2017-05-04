@@ -190,6 +190,7 @@ namespace SmartBandAlertV7.Data
                 request1.Content = new StringContent(obj, Encoding.UTF8, "application/json");
                 var data = client.SendAsync(request1).Result;
                 App.HaveSmartBand = true; //change the name of the variabel-)
+                ((App)App.Current).SaveProfile();
             }
             else
             {
