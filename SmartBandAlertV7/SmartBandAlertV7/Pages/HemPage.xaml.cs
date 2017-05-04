@@ -52,8 +52,12 @@ namespace SmartBandAlertV7.Pages
             //Battery 
             progBar.BindingContext = new { w4 = App.ScreenWidth * 160 / (App.ScreenDPI * 3), theprog = 0.5 };
             progBar.Scale = 1;
+            progBar.IsVisible = false;
+            progBarText.IsVisible = false;
+            progBarFirst.IsVisible = false;
+            checkBattery.IsVisible = false;
             batterystack.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            progBarText.BindingContext = new { theprogtext = "50%" };
+            progBarText.BindingContext = new { theprogtext = "........." };
             checkBattery.BindingContext = new { bgc3 = Color.White };
 
             startDanger.Clicked += async (s, e) =>
@@ -86,7 +90,6 @@ namespace SmartBandAlertV7.Pages
                     MessagingCenter.Send(message, "StopLongRunningTaskMessage");
                 }
             };
-
         }
         public async void connectToBackend(bool connect)
         {
@@ -243,6 +246,11 @@ namespace SmartBandAlertV7.Pages
                             }
 
                             efterConnection();
+                            progBar.IsVisible = true;
+                            progBarText.IsVisible = true;
+                            progBarFirst.IsVisible = true;
+                            checkBattery.IsVisible = true;
+                            Button_OnClickedBatteriUppdat(new Object(), EventArgs.Empty);
                         }
 
 
@@ -257,6 +265,11 @@ namespace SmartBandAlertV7.Pages
                     {
                         this.device.CancelConnection();
                         App.isConnectedBLE = false;
+
+                        progBar.IsVisible = false;
+                        progBarText.IsVisible = false;
+                        progBarFirst.IsVisible = false;
+                        checkBattery.IsVisible = false;
                     }
                 }
             }
