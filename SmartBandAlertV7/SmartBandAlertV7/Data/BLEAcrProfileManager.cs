@@ -31,14 +31,15 @@ namespace SmartBandAlertV7.Data
                     var vm = bleprofile.Devices.FirstOrDefault(dev => dev.Uuid.Equals(x.Uuid));
                     if (vm != null)
                         vm.IsConnected = x.Status == ConnectionStatus.Connected;
+
                 });
 
-            bleprofile.BleAdapter.WhenStatusChanged().Subscribe(x => Device.BeginInvokeOnMainThread(() =>
+            /*bleprofile.BleAdapter.WhenStatusChanged().Subscribe(x => Device.BeginInvokeOnMainThread(() =>
             {
                 bleprofile.IsSupported = x == AdapterStatus.PoweredOn;
                 //this.Title = $"BLE Scanner ({x})";
             }
-            ));
+            ));*/
 
             //this.AppState.WhenBackgrounding().Subscribe(_ => this.scan?.Dispose());
         }

@@ -22,6 +22,7 @@
             <Button BackgroundColor="{Binding bgc3}" x:Name="checkBattery" Text="Uppdatera" Clicked="Button_OnClickedBatteriUppdat"></Button>
         </StackLayout>
         <Label Text="Bluetooth Enheter:" TextColor="Black" VerticalTextAlignment="Center" FontSize="Large"></Label>
+        <Label x:Name="btWarning" VerticalTextAlignment="Center" BackgroundColor="Red" Text="Varning, bluetooth är inte aktiverat." IsVisible="{Binding IsBlueToothOn}"></Label>
         <ListView x:Name="theBTunits" CachingStrategy="RecycleElement" RowHeight="55" ItemsSource="{Binding Devices}">
             <ListView.ItemTemplate>
                 <DataTemplate>

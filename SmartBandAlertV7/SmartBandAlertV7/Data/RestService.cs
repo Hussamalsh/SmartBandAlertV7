@@ -184,14 +184,23 @@ namespace SmartBandAlertV7.Data
         public async void editUserLocationAsync(Location userloc)
         {
             var obj = JsonConvert.SerializeObject(userloc, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-            var request1 = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/Location");
-            request1.Content = new StringContent(obj, Encoding.UTF8, "application/json");
-            var data = client.SendAsync(request1).Result;
+            if (!App.HaveSmartBand)
+            {
+                var request1 = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/Location");
+                request1.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+                var data = client.SendAsync(request1).Result;
+                App.HaveSmartBand = true; //change the name of the variabel-)
+            }
+            else
+            {
+                var request = new HttpRequestMessage(HttpMethod.Put, "https://sbat1.azurewebsites.net/api/Location");
+                request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+                //data = client.SendAsync(request).Result;
+                var response1 = await client.PutAsync("https://sbat1.azurewebsites.net/api/Location", request.Content);
+            }
 
-            var request = new HttpRequestMessage(HttpMethod.Put, "https://sbat1.azurewebsites.net/api/Location");
-            request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
-            //data = client.SendAsync(request).Result;
-            var response1 =  await client.PutAsync("https://sbat1.azurewebsites.net/api/Location", request.Content);
+
+            
 
         }
 

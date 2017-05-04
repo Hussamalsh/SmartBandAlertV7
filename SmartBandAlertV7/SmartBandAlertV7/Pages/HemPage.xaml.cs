@@ -35,15 +35,19 @@ namespace SmartBandAlertV7.Pages
 
         IDisposable subNoTIFY;
 
+        
 
         public BLEAcrProfileManager bleACRProfileManager;
+
+        public bool IsBlueToothOn { get; set; } = App.BLEAcrProfileManager.bleprofile.IsSupported;
+        //btWarning.IsVisible = !App.BLEAcrProfileManager.bleprofile.IsSupported;  //new one
+
         public HemPage()
         {
 
             InitializeComponent();
 
             bleACRProfileManager = App.BLEAcrProfileManager;
-
             //theBTunits.IsPullToRefreshEnabled = true;
 
             stopDanger.BindingContext = new { w1 = App.ScreenWidth * 160 / (App.ScreenDPI), bgc2 = Color.White };
@@ -56,6 +60,7 @@ namespace SmartBandAlertV7.Pages
             progBarText.IsVisible = false;
             progBarFirst.IsVisible = false;
             checkBattery.IsVisible = false;
+            //btWarning.widthRequest = App.ScreenWidth * 160 / (App.ScreenDPI);
             batterystack.HorizontalOptions = LayoutOptions.CenterAndExpand;
             progBarText.BindingContext = new { theprogtext = "........." };
             checkBattery.BindingContext = new { bgc3 = Color.White };
@@ -90,6 +95,8 @@ namespace SmartBandAlertV7.Pages
                     MessagingCenter.Send(message, "StopLongRunningTaskMessage");
                 }
             };
+
+
         }
         public async void connectToBackend(bool connect)
         {
@@ -147,6 +154,14 @@ namespace SmartBandAlertV7.Pages
             else
                 await DisplayAlert("Bluetooth är avstängt", "Var vänlig starta bluetooth.", "Ok");
             */
+
+            bleACRProfileManager.bleprofile.BleAdapter.WhenStatusChanged().Subscribe(x => Device.BeginInvokeOnMainThread(() =>
+            {
+                //bleACRProfileManager.bleprofile.IsSupported = x == AdapterStatus.PoweredOn;
+                //this.Title = $"BLE Scanner ({x})";
+                btWarning.IsVisible = x != AdapterStatus.PoweredOn;
+            }
+            ));
         }
 
         public async void Button_OnClickedScanToggle(object sender, EventArgs e)
