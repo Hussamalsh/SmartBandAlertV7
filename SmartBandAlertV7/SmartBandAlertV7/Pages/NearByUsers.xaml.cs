@@ -86,14 +86,24 @@ namespace SmartBandAlertV7.Pages
 
             if (list.Length != 0)
             {
-                for (int i = 0; i < list.Length; i++)
+                for (int i = 1; i < list.Length; i++)
                 {
-                    var loc = list.ElementAt(0);
-                    map.Pins.Add(new Pin()
+                    var loc = list.ElementAt(i);
+                    try { 
+                        map.Pins.Add(new Pin()
+                        {
+                            Position = new Position(Convert.ToDouble(loc.latitude), Convert.ToDouble(loc.longitude)),
+                            Label = loc.distance,
+                        });
+                    }
+                    catch(Exception e)
                     {
-                        Position = new Position(Convert.ToDouble(loc.latitude), Convert.ToDouble(loc.longitude)),
-                        Label = loc.distance,
-                    });
+                        map.Pins.Add(new Pin()
+                        {
+                            Position = new Position(Convert.ToDouble(loc.latitude.Replace('.',',')), Convert.ToDouble(loc.longitude.Replace('.', ','))),
+                            Label = loc.distance,
+                        });
+                    }
 
                 }
             }

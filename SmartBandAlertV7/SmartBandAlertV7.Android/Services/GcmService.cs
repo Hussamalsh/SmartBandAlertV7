@@ -120,10 +120,23 @@ namespace SmartBandAlertV7.Droid.Services
                         if (ctr == 0)
                             App.VictimId = tst;
                         else if (ctr == 1)
-                            App.Latitude = Convert.ToDouble(tst);
+                            try {
+                                App.Latitude = Convert.ToDouble(tst);
+                            }
+                            catch(Exception e)
+                            {
+                                App.Latitude = Convert.ToDouble(tst.Replace('.', ','));
+                            }
                         else
                         {
-                            App.Longitude = Convert.ToDouble(tst);
+                            try
+                            {
+                                App.Longitude = Convert.ToDouble(tst);
+                            }
+                            catch (Exception e)
+                            {
+                                App.Longitude = Convert.ToDouble(tst.Replace('.', ','));
+                            }
                         }
                         ctr++;
                     }

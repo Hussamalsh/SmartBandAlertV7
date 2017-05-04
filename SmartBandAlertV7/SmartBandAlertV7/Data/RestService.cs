@@ -139,7 +139,7 @@ namespace SmartBandAlertV7.Data
 
 
                 var data = client.GetStringAsync("https://sbat1.azurewebsites.net/api/location?latitude="
-                                           + App.Latitude + "&longitude=" + App.Longitude).Result;
+                                           + App.Latitude.ToString().Replace(',','.') + "&longitude=" + App.Longitude.ToString().Replace(',', '.')).Result;
                 var list = JsonConvert.DeserializeObject<List<Location>>(data);
 
                 ob.OnNext(list.ToArray());

@@ -140,8 +140,10 @@ namespace SmartBandAlertV7.Pages
    
                 
             }
+            /*
             else
                 await DisplayAlert("Bluetooth är avstängt", "Var vänlig starta bluetooth.", "Ok");
+            */
         }
 
         public async void Button_OnClickedScanToggle(object sender, EventArgs e)
