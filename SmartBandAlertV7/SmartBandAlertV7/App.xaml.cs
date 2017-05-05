@@ -76,6 +76,7 @@ namespace SmartBandAlertV7
             if (IsLoggedIn)
             {
                 sendUserLocationAsync();
+                updateLocation();
             }
             if (NotificationOn)
             {
@@ -217,14 +218,19 @@ namespace SmartBandAlertV7
 
         public void sendUserLocationAsync()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(35), () =>
+            Device.StartTimer(TimeSpan.FromSeconds(120), () =>
             {
                 // Do something
-                GPSLocation gpsloc = new GPSLocation();
-                gpsloc.getLocationAsync(true);
-                return false; // True = Repeat again, False = Stop the timer
+                updateLocation();
+                return true; // True = Repeat again, False = Stop the timer
             });
 
+        }
+
+        private void updateLocation()
+        {
+            GPSLocation gpsloc = new GPSLocation();
+            gpsloc.getLocationAsync(true);
         }
     }
 }

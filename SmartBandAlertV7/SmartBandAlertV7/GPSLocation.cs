@@ -53,8 +53,8 @@ namespace SmartBandAlertV7
                 {
                     fbid = App.FacebookId,
                     userName = App.FacebookName,
-                    latitude = Latitude.ToString(),
-                    longitude = Longitude.ToString(),
+                    latitude = Latitude.ToString().Replace(",","."),
+                    longitude = Longitude.ToString().Replace(",","."),
                     distance = ""
                 });
             }

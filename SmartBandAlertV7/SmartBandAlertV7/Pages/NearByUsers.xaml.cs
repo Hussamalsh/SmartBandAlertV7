@@ -88,7 +88,7 @@ namespace SmartBandAlertV7.Pages
 
                 if (list.Length != 0)
                 {
-                    for (int i = 1; i < list.Length; i++)
+                    for (int i = 0; i < list.Length; i++)
                     {
                         var loc = list.ElementAt(i);
                         try
