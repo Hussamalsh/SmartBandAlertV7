@@ -20,6 +20,36 @@ using Xamarin.Forms.Platform.iOS;
 
 namespace SmartBandAlertV7.iOS.Renderers
 {
+    [JsonObject]
+    public class UserM
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("verified_email")]
+        public bool VerifiedEmail { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("given_name")]
+        public string GivenName { get; set; }
+
+        [JsonProperty("family_name")]
+        public string FamilyName { get; set; }
+
+        [JsonProperty("link")]
+        public string Link { get; set; }
+
+        [JsonProperty("picture")]
+        public string Picture { get; set; }
+
+        [JsonProperty("gender")]
+        public string Gender { get; set; }
+    }
     public class FBLoginPageRenderer : PageRenderer
     {
         private readonly TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -100,41 +130,48 @@ namespace SmartBandAlertV7.iOS.Renderers
                         //saveset(obj["id"], obj["name"]);
 
                         // Get Shared User Defaults
-                        var plist = NSUserDefaults.StandardUserDefaults;
+                        var plist1 = NSUserDefaults.StandardUserDefaults;
                         // Save value
-                        plist.SetString(obj["id"], "PrefId");
-                        plist.SetString(obj["name"], "PrefName");
+                        plist1.SetString(obj["id"], "PrefId");
+                        plist1.SetString(obj["name"], "PrefName");
                         // Sync changes to database
-                        plist.Synchronize();
+                        plist1.Synchronize();
 
                     }
                     else
                     {
-                        var request = new OAuth2Request("GET", new Uri("https://www.googleapis.com/plus/v1/people/me/openIdConnect"), null, eargs.Account);
-                        var result = await request.GetResponseAsync();
+                        string url1 = "https://www.googleapis.com/oauth2/v2/userinfo";
+                        var request = new OAuth2Request("GET", new Uri(url1), null, eargs.Account);
+                        var response = await request.GetResponseAsync();
+                        if (response != null)
+                        {
 
-                        string resultText = result.GetResponseText();
-                        var obj = JsonValue.Parse(resultText);
+                            HttpClient client1 = new HttpClient();
+                            client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            client1.MaxResponseContentBufferSize = 256000;
 
-                        /*string username = (string)obj["name"];
-                        string email = (string)obj["email"];*/
+                            //var data = client.SendAsync(request).Result;
+                            string url = response.ResponseUri.ToString();
+                            var data = client1.GetStringAsync(url).Result;
 
+                            //var obj = JsonValue.Parse(data);
+                            var obj = JsonConvert.DeserializeObject<UserM>(data);
 
+                            App.FacebookId = obj.Id;
+                            App.FacebookName = obj.Name;
+                            App.EmailAddress = obj.Email;
+                            App.ProfilePic = obj.Picture;
+                            //
+                            // saveset(obj["id"], obj["name"]);
 
-                        App.FacebookId = obj["sub"];
-                        App.FacebookName = obj["name"];
-                        App.EmailAddress = obj["email"];
-                        App.ProfilePic = obj["picture"];
-                        //
-                        // saveset(obj["id"], obj["name"]);
-
-                        // Get Shared User Defaults
-                        var plist = NSUserDefaults.StandardUserDefaults;
-                        // Save value
-                        plist.SetString(obj["id"], "PrefId");
-                        plist.SetString(obj["name"], "PrefName");
-                        // Sync changes to database
-                        plist.Synchronize();
+                            // Get Shared User Defaults
+                            var plist2 = NSUserDefaults.StandardUserDefaults;
+                            // Save value
+                            plist2.SetString(obj.Id, "PrefId");
+                            plist2.SetString(obj.Name, "PrefName");
+                            // Sync changes to database
+                            plist2.Synchronize();
+                        }
 
 
                     }
@@ -145,19 +182,30 @@ namespace SmartBandAlertV7.iOS.Renderers
 
                     //Save as a new user to the database
                     await App.UserManager.SaveTaskAsync
-                            (new Models.User { FBID = App.FacebookId, UserName = App.FacebookName, Email = App.EmailAddress, ImgLink = App.ProfilePic }, true);
+                            (new Models.User {
+                                FBID = App.FacebookId,
+                                UserName = App.FacebookName,
+                                Email = App.EmailAddress,
+                                ImgLink = App.ProfilePic
+                            }, 
+                            true);
 
 
                     //retreive gcm id
-                    // var prefs = Android.App.Application.Context.GetSharedPreferences("MyApp", FileCreationMode.Private);
-                    //string id = prefs.GetString("regId", null);
+                    var plist = NSUserDefaults.StandardUserDefaults;
+                    // Get value
+                    var id = plist.StringForKey("regid");
 
-                    //RegisterAsync(id, new string[] { App.FacebookId + "T" }, App.FacebookId);
+                    RegisterAsync(id, new string[] { App.FacebookId + "T" }, App.FacebookId);
+
 
                     await App.Current.MainPage.Navigation.PopModalAsync();
                     App.IsLoggedIn = true;
                     ((App)App.Current).SaveProfile();
                     ((App)App.Current).PresentMainPage();
+
+
+
                 }
             };
 
@@ -199,7 +247,7 @@ namespace SmartBandAlertV7.iOS.Renderers
 
             var deviceRegistration = new DeviceRegistration
             {
-                Platform = "gcm",
+                Platform = "apns",
                 Handle = handle,
                 Tags = tags.ToArray<string>(),
                 Friendid = fid

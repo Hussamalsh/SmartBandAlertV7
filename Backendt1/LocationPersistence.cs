@@ -125,9 +125,54 @@ namespace Backendt1
 
 
 
+        public ArrayList getallLocations()
+        {
+            MySql.Data.MySqlClient.MySqlConnection conn;
+            string myConnectionString = connectionString;
+            conn = new MySql.Data.MySqlClient.MySqlConnection();
+
+            try
+            {
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+
+                ArrayList personArrayL = new ArrayList();
+
+                MySql.Data.MySqlClient.MySqlDataReader mySQLReader = null;
+
+                //String sqlString = "SELECT * FROM location WHERE FBID =" + ID + " ORDER BY startDate DESC LIMIT 1";
+                String sqlstring1 = "select * from location";
+
+                MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlstring1, conn);
+
+                mySQLReader = cmd.ExecuteReader();
+                while (mySQLReader.Read())
+                {
+                    Location u = new Location();
+
+                    u.FBID = null;
+                    u.UserName = mySQLReader.GetString(0);
+                    u.Latitude = mySQLReader.GetDecimal(1).ToString();
+                    u.Longitude = mySQLReader.GetDecimal(2).ToString();
+                    u.Distance = mySQLReader.GetDecimal(3).ToString() + " Km";
+                    personArrayL.Add(u);
+                }
+
+
+                return personArrayL;
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+        }
 
 
 
-
-    }
+        }
 }

@@ -53,6 +53,11 @@
 		<string>fetch</string>
 		<string>remote-notification</string>
 		<string>bluetooth-central</string>
+		<string>location</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We are using your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Can we use your location</string>
 </dict>
 </plist>

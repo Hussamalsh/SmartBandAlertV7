@@ -72,8 +72,16 @@ namespace Backendt1.Controllers
                         break;
                     case "apns":
                         // iOS
-                        var alert = "{\"aps\":{\"alert\":\"" + "From " + user + ": " + "apns=message" + "\"}}";
-                        outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert, userTag);
+                        var alert = "{\"aps\":{\"alert\":\"" + "From "+value.UserName + " Need Help from you. The User ID =["+ value.FBID 
+                                        + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
+                        outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert, f.FriendFBID + "T");
+                        if (firsttime)
+                        {
+                            var alert1 = "{\"aps\":{\"alert\":\"" + "Your alarm was successfully sent to all your friends ID =[" + value.FBID
+                            + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
+                            outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert1, value.FBID + "T");
+                            firsttime = false;
+                        }
                         break;
                     case "gcm":
                         // Android

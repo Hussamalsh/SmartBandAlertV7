@@ -9,6 +9,7 @@ using SmartBandAlertV7.Models;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
 using System.Threading;
+using Xamarin.Forms;
 
 namespace SmartBandAlertV7.Data
 {
@@ -91,7 +92,18 @@ namespace SmartBandAlertV7.Data
             if (isNewItem)
             {
                 var obj = JsonConvert.SerializeObject(item, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://sbat1.azurewebsites.net/api/victim/?pns=gcm&to_tag=" + item.FBID + "T");
+                string url = "";
+                switch (Device.OS)
+                {
+                    case TargetPlatform.iOS:
+                        url = "https://sbat1.azurewebsites.net/api/victim/?pns=apns&to_tag=";
+                        break;
+                    case TargetPlatform.Android:
+                        url = "https://sbat1.azurewebsites.net/api/victim/?pns=gcm&to_tag=";
+                        break;
+                }
+                var request = new HttpRequestMessage(HttpMethod.Post, url + item.FBID + "T");
+
                 request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
                 var data = client.SendAsync(request).Result;
             }

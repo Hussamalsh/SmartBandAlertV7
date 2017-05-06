@@ -12,6 +12,7 @@ using SmartBandAlertV7.Data;
 using SmartBandAlertV7.Messages;
 using SmartBandAlertV7.iOS.Services;
 using Microsoft.WindowsAzure.MobileServices;
+using Acr.UserDialogs;
 
 namespace SmartBandAlertV7.iOS
 {
@@ -32,7 +33,8 @@ namespace SmartBandAlertV7.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
-
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
+            Xamarin.FormsMaps.Init();
             /*
             // define useragent android like
             string userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36";
@@ -181,6 +183,14 @@ namespace SmartBandAlertV7.iOS
             // Register for push with your mobile app
             var push = SBAManager.DefaultManager.CurrentClient.GetPush();
             push.RegisterAsync(deviceToken, templates);
+
+            var plist = NSUserDefaults.StandardUserDefaults;
+            // Save value
+            plist.SetString(deviceToken.ToString(), "regid");
+            // Sync changes to database
+            plist.Synchronize();
+
+
         }
 
         public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo,

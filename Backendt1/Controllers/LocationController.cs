@@ -14,9 +14,10 @@ namespace Backendt1.Controllers
     public class LocationController : ApiController
     {
         // GET: api/Location
-        public IEnumerable<string> Get()
+        public ArrayList Get()
         {
-            return new string[] { "value1", "value2" };
+            LocationPersistence lp = new LocationPersistence();
+            return lp.getallLocations();
         }
 
         // GET: api/Location/5
