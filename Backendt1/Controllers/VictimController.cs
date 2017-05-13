@@ -61,55 +61,60 @@ namespace Backendt1.Controllers
              bool firsttime = true;
 
             foreach (Friends f in friends)
-            { 
-                switch (pns.ToLower())
+            {
+
+                if (f.Status == 1)
                 {
-                    case "wns":
-                        // Windows 8.1 / Windows Phone 8.1
-                        var toast = @"<toast><visual><binding template=""ToastText01""><text id=""1"">" +
-                                    "From " + user + ": " + "wns=message" + "</text></binding></visual></toast>";
-                        outcome = await Notifications.Instance.Hub.SendWindowsNativeNotificationAsync(toast, to_tag);
-                        break;
-                    case "apns":
-                        // iOS
-                        var alert = "{\"aps\":{\"alert\":\"" + "From "+value.UserName + " Need Help from you. The User ID =["+ value.FBID 
-                                        + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
-                        outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert, f.FriendFBID + "T");
-                        if (firsttime)
-                        {
-                            var alert1 = "{\"aps\":{\"alert\":\"" + "Your alarm was successfully sent to all your friends ID =[" + value.FBID
-                            + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
-                            outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert1, value.FBID + "T");
-                            firsttime = false;
-                        }
-                        break;
-                    case "gcm":
-                        // Android
-                        //{"data":{"message":"From Hussi Need Help from you. The User ID =[132569873917640] [56.6642811] [12.8778527]"}}
-                        var notif = "{ \"data\" : {\"message\":\"" + "From "+value.UserName + " Need Help from you. The User ID =["+ value.FBID 
-                                        + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
-                        outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif,f.FriendFBID+ "T");
-
-                        if (firsttime)
-                        {
-                            notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =[" + value.FBID
-                                        + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
-                            outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, value.FBID + "T");
-                            firsttime = false;
-                        }
-
-
-                        break;
-                }
-
-                if (outcome != null)
-                {
-                    if (!((outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Abandoned) ||
-                        (outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Unknown)))
+                    switch (pns.ToLower())
                     {
-                        ret = HttpStatusCode.OK;
+                        case "wns":
+                            // Windows 8.1 / Windows Phone 8.1
+                            var toast = @"<toast><visual><binding template=""ToastText01""><text id=""1"">" +
+                                        "From " + user + ": " + "wns=message" + "</text></binding></visual></toast>";
+                            outcome = await Notifications.Instance.Hub.SendWindowsNativeNotificationAsync(toast, to_tag);
+                            break;
+                        case "apns":
+                            // iOS
+                            var alert = "{\"aps\":{\"alert\":\"" + "From " + value.UserName + " Need Help from you. The User ID =[" + value.FBID
+                                            + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
+                            outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert, f.FriendFBID + "T");
+                            if (firsttime)
+                            {
+                                var alert1 = "{\"aps\":{\"alert\":\"" + "Your alarm was successfully sent to all your friends ID =[" + value.FBID
+                                + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
+                                outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert1, value.FBID + "T");
+                                firsttime = false;
+                            }
+                            break;
+                        case "gcm":
+                            // Android
+                            //{"data":{"message":"From Hussi Need Help from you. The User ID =[132569873917640] [56.6642811] [12.8778527]"}}
+                            var notif = "{ \"data\" : {\"message\":\"" + "From " + value.UserName + " Need Help from you. The User ID =[" + value.FBID
+                                            + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
+                            outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, f.FriendFBID + "T");
+
+                            if (firsttime)
+                            {
+                                notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =[" + value.FBID
+                                            + "] [" + value.Latitude + "] [" + value.Longitude + "]\"}}";
+                                outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, value.FBID + "T");
+                                firsttime = false;
+                            }
+
+
+                            break;
+                    }
+
+                    if (outcome != null)
+                    {
+                        if (!((outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Abandoned) ||
+                            (outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Unknown)))
+                        {
+                            ret = HttpStatusCode.OK;
+                        }
                     }
                 }
+                
 
            }
             // return Request.CreateResponse(ret);
@@ -236,6 +241,8 @@ namespace Backendt1.Controllers
                 dmObj.isDangerModeOn = true;
                 dmObj.islive = true;
                 dmObj.FBID = id;
+                dmObj.Latitude = victimOBJ.Latitude;
+                dmObj.Longitude = victimOBJ.Longitude;
                 dmObj.isAppLive();
                 AllUsersDM.audmInstance.addnewUser(dmObj); //listan
             }

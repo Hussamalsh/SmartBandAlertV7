@@ -92,20 +92,55 @@ namespace SmartBandAlertV7.Pages
                     {
                         var loc = list.ElementAt(i);
                         try
-                        {
-                            map.Pins.Add(new Pin()
+                        {/*pin.Clicked += async (sender, e) =>          
+                            {                 await DisplayAlert("This is a tag", "Click click, click", "Cancel");  */
+                            var pin = new Pin()
                             {
                                 Position = new Position(Convert.ToDouble(loc.latitude), Convert.ToDouble(loc.longitude)),
-                                Label = loc.distance,
-                            });
+                                Label = "Adda som beskyddare",
+                                Type = PinType.SavedPin,
+                                BindingContext = loc
+                               
+                            };
+                            pin.Clicked += async (sender, e) =>
+                            {
+                                var button = sender as Pin;
+                                Location todo = button.BindingContext as Location;
+                                FriendsList f = new FriendsList()
+                                {
+                                    FriendFBID = todo.fbid, UserName = todo.userName, ImgLink = null, UserFBID = App.FacebookId
+                                };
+
+                                await App.FriendsManager.SaveTaskAsync(f, true);
+
+                                await DisplayAlert("Beskydare", "Du har Addat en ny Beskydare", "Cancel");
+                            };
+                            map.Pins.Add(pin);
                         }
                         catch (Exception e)
                         {
-                            map.Pins.Add(new Pin()
+                            var pin1 = new Pin()
                             {
-                                Position = new Position(Convert.ToDouble(loc.latitude.Replace('.', ',')), Convert.ToDouble(loc.longitude.Replace('.', ','))),
-                                Label = loc.distance,
-                            });
+                                Position = new Position(Convert.ToDouble(loc.latitude.Replace('.', ',')),
+                                                        Convert.ToDouble(loc.longitude.Replace('.', ','))),
+                                Label = "Adda som beskyddare",
+                                Type = PinType.SavedPin,
+                                BindingContext = loc
+                            };
+                            pin1.Clicked += async (senderr, ee) =>
+                            {
+                                var button = senderr as Pin;
+                                Location todo = button.BindingContext as Location;
+                                FriendsList f = new FriendsList()
+                                {
+                                    FriendFBID = todo.fbid, UserName = todo.userName, ImgLink = null, UserFBID = App.FacebookId
+                                };
+
+                                await App.FriendsManager.SaveTaskAsync(f, true);
+
+                                await DisplayAlert("Beskydare", "Du har Addat en ny Beskydare", "Cancel");
+                            };
+                            map.Pins.Add(pin1);
                         }
 
                     }

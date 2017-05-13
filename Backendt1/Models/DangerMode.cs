@@ -41,6 +41,9 @@ namespace Backendt1.Models
             set;
             get;
         }
+        public String Latitude { get; set; }
+
+        public String Longitude { get; set; }
 
         public TaskDMtimer ti;
         public void isAppLive()
@@ -113,43 +116,56 @@ namespace Backendt1.Models
 
             foreach (Friends f in friends)
             {
-                switch (pns.ToLower())
+                if (f.Status == 1)
                 {
-                    case "wns":
-                        // Windows 8.1 / Windows Phone 8.1
-                        var toast = @"<toast><visual><binding template=""ToastText01""><text id=""1"">" +
-                                    "From " + user + ": " + "wns=message" + "</text></binding></visual></toast>";
-                        outcome = await Notifications.Instance.Hub.SendWindowsNativeNotificationAsync(toast, to_tag);
-                        break;
-                    case "apns":
-                        // iOS
-                        var alert = "{\"aps\":{\"alert\":\"" + "From " + user + ": " + "apns=message" + "\"}}";
-                        outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert, userTag);
-                        break;
-                    case "gcm":
-                        // Android
-                        //value.UserName + " Need Help from you. The User ID =" + value.FBID
-                        var notif = "{ \"data\" : {\"message\":\"" + "From " + UserName + " Need Help from you. The User ID =" + FBID + "\"}}";
-                        outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, f.FriendFBID + "T");
-
-                        if (firsttime)
-                        {
-                            System.Threading.Thread.Sleep(1000);
-                            notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =" + FBID + "\"}}";
-                            outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, FBID + "T");
-                            firsttime = false;
-                        }
-
-
-                        break;
-                }
-
-                if (outcome != null)
-                {
-                    if (!((outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Abandoned) ||
-                        (outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Unknown)))
+                    switch (pns.ToLower())
                     {
-                        ret = HttpStatusCode.OK;
+                        case "wns":
+                            // Windows 8.1 / Windows Phone 8.1
+                            var toast = @"<toast><visual><binding template=""ToastText01""><text id=""1"">" +
+                                        "From " + user + ": " + "wns=message" + "</text></binding></visual></toast>";
+                            outcome = await Notifications.Instance.Hub.SendWindowsNativeNotificationAsync(toast, to_tag);
+                            break;
+                        case "apns":
+                            // iOS
+                            var alert = "{\"aps\":{\"alert\":\"" + "From " + UserName + " Need Help from you. The User ID =[" + FBID
+                                            + "] [" + Latitude + "] [" + Longitude + "]\"}}";
+                            outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert, f.FriendFBID + "T");
+                            if (firsttime)
+                            {
+                                var alert1 = "{\"aps\":{\"alert\":\"" + "Your alarm was successfully sent to all your friends ID =[" + FBID
+                                + "] [" + Latitude + "] [" + Longitude + "]\"}}";
+                                outcome = await Notifications.Instance.Hub.SendAppleNativeNotificationAsync(alert1, FBID + "T");
+                                firsttime = false;
+                            }
+                            break;
+                        case "gcm":
+                            // Android
+                            //{"data":{"message":"From Hussi Need Help from you. The User ID =[132569873917640] [56.6642811] [12.8778527]"}}
+                            var notif = "{ \"data\" : {\"message\":\"" + "From " + UserName + " Need Help from you. The User ID =[" + FBID
+                                            + "] [" + Latitude + "] [" + Longitude + "]\"}}";
+                            outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, f.FriendFBID + "T");
+
+                            if (firsttime)
+                            {
+                                System.Threading.Thread.Sleep(500);
+                                notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =[" + FBID
+                                            + "] [" + Latitude + "] [" + Longitude + "]\"}}";
+                                outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, FBID + "T");
+                                firsttime = false;
+                            }
+
+
+                            break;
+                    }
+
+                    if (outcome != null)
+                    {
+                        if (!((outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Abandoned) ||
+                            (outcome.State == Microsoft.Azure.NotificationHubs.NotificationOutcomeState.Unknown)))
+                        {
+                            ret = HttpStatusCode.OK;
+                        }
                     }
                 }
 

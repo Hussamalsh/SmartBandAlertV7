@@ -89,7 +89,7 @@ namespace Backendt1
                 MySql.Data.MySqlClient.MySqlDataReader mySQLReader = null;
 
                 //String sqlString = "SELECT * FROM location WHERE FBID =" + ID + " ORDER BY startDate DESC LIMIT 1";
-                String sqlstring1 = "select * from(SELECT name,latitude,longitude,round((((acos(sin(("+latitude+
+                String sqlstring1 = "select * from(SELECT fbid,name,latitude,longitude,round((((acos(sin(("+latitude+
                     "*pi()/180)) *sin((`latitude`*pi()/180))+cos(("+latitude+
                     "*pi()/180)) * cos((`latitude`*pi()/180)) *cos((("+longitude+
                     "- `longitude`)*pi()/180))))*180/pi())*60*1.1515*1.609344),1) as distance FROM location) as temp where distance <50";
@@ -101,11 +101,11 @@ namespace Backendt1
                 {
                     Location u = new Location();
 
-                    u.FBID = null;
-                    u.UserName = mySQLReader.GetString(0);
-                    u.Latitude = mySQLReader.GetDecimal(1).ToString();
-                    u.Longitude = mySQLReader.GetDecimal(2).ToString();
-                    u.Distance = mySQLReader.GetDecimal(3).ToString()+" Km";
+                    u.FBID = mySQLReader.GetString(0);
+                    u.UserName = mySQLReader.GetString(1);
+                    u.Latitude = mySQLReader.GetDecimal(2).ToString();
+                    u.Longitude = mySQLReader.GetDecimal(3).ToString();
+                    u.Distance = mySQLReader.GetDecimal(4).ToString()+" Km";
                     personArrayL.Add(u);
                 }
 
@@ -150,11 +150,11 @@ namespace Backendt1
                 {
                     Location u = new Location();
 
-                    u.FBID = null;
-                    u.UserName = mySQLReader.GetString(0);
-                    u.Latitude = mySQLReader.GetDecimal(1).ToString();
-                    u.Longitude = mySQLReader.GetDecimal(2).ToString();
-                    u.Distance = mySQLReader.GetDecimal(3).ToString() + " Km";
+                    u.FBID = mySQLReader.GetString(0);
+                    u.UserName = mySQLReader.GetString(1);
+                    u.Latitude = mySQLReader.GetDecimal(2).ToString();
+                    u.Longitude = mySQLReader.GetDecimal(3).ToString();
+                    u.Distance = mySQLReader.GetDecimal(4).ToString() + " Km";
                     personArrayL.Add(u);
                 }
 

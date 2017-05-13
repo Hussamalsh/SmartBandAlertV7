@@ -476,7 +476,7 @@ namespace SmartBandAlertV7.Pages
             victim.Longitude = "" + position.Longitude.ToString().ToString().Replace(",", ".");
             victim.Adress = "" + possibleAddresses.FirstOrDefault();
 
-            if (p == 1)
+            if (p == 1) //activate DM in backend and send victim object
             {
                 App.VictimManager.setDM(victim, true);
                 Task.Run(async () => uppdateLiveValueAsync());
