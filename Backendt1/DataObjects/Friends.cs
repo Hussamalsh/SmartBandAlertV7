@@ -11,6 +11,7 @@ namespace Backendt1.DataObjects
         public String FriendFBID { get; set; }
         public String UserName { get; set; }
         public String ImgLink { get; set; }
+        public int Status { get; set; }
 
 
     }

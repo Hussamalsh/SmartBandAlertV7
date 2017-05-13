@@ -39,6 +39,7 @@ namespace Backendt1
 
                     f.UserFBID = mySQLReader.GetString(0);
                     f.FriendFBID = mySQLReader.GetString(1);
+                    f.Status = mySQLReader.GetInt16(2);
                     personArrayL.Add(f);
                 }
 
@@ -71,8 +72,9 @@ namespace Backendt1
                 MySql.Data.MySqlClient.MySqlDataReader mySQLReader = null;
 
                 //String sqlString = "SELECT FriendFBID FROM friends WHERE UserFBID=" + ID.ToString();
-                String order5 =
-         "SELECT B.FriendFBID,C.UserName,c.ImgLink FROM friends B INNER JOIN user C on B.FriendFBID = C.FBID WHERE B.UserFBID =" + ID;
+                String order5 = "SELECT B.UserFBID,B.FriendFBID,C.UserName,c.ImgLink, B.Status "
+                               + "FROM friends B INNER JOIN user C on B.UserFBID = C.FBID "
+                               + "WHERE B.FriendFBID =" + ID + " or B.UserFBID =" + ID;
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(order5, conn);
 
 
@@ -80,12 +82,57 @@ namespace Backendt1
                 while (mySQLReader.Read())
                 {
                     Friends f = new Friends();
-                    f.FriendFBID = mySQLReader.GetString(0);
-                    f.UserName = mySQLReader.GetString(1);
-                    f.ImgLink = mySQLReader.GetString(2);
+                    f.UserFBID = mySQLReader.GetString(0);
+                    f.FriendFBID = mySQLReader.GetString(1);
+                    f.UserName = mySQLReader.GetString(2);
+                    f.ImgLink = mySQLReader.GetString(3);
+                    f.Status = mySQLReader.GetInt16(4);
                     personArrayL.Add(f);
                 }
 
+                return personArrayL;
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+
+        public ArrayList getFriendRequest(String ID)
+        {
+            MySql.Data.MySqlClient.MySqlConnection conn;
+            //string myConnectionString = ConfigurationManager.ConnectionStrings["localDB"].ConnectionString;
+            string myConnectionString = connectionString;
+            conn = new MySql.Data.MySqlClient.MySqlConnection();
+            try
+            {
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+
+                ArrayList personArrayL = new ArrayList();
+
+                MySql.Data.MySqlClient.MySqlDataReader mySQLReader = null;
+
+                //String sqlString = "SELECT FriendFBID FROM friends WHERE UserFBID=" + ID.ToString();
+                String order6 ="SELECT B.UserFBID,B.FriendFBID,C.UserName,c.ImgLink, B.Status"
+                                +" FROM friends B INNER JOIN user C on B.UserFBID = C.FBID WHERE B.FriendFBID =" + ID;
+                MySql.Data.MySqlClient.MySqlCommand cmd2 = new MySql.Data.MySqlClient.MySqlCommand(order6, conn);
+                mySQLReader = cmd2.ExecuteReader();
+                while (mySQLReader.Read())
+                {
+                    Friends f = new Friends();
+                    f.UserFBID = mySQLReader.GetString(0);
+                    f.FriendFBID = mySQLReader.GetString(1);
+                    f.UserName = mySQLReader.GetString(2);
+                    f.ImgLink = mySQLReader.GetString(3);
+                    f.Status = mySQLReader.GetInt16(4);
+                    personArrayL.Add(f);
+                }
 
                 return personArrayL;
             }
@@ -149,8 +196,8 @@ namespace Backendt1
             {
                 conn.ConnectionString = myConnectionString;
                 conn.Open();
-                String sqlString = "INSERT INTO Friends (UserFBID, FriendFBID)"
-                    + "VALUES('" + personToSave.UserFBID + "','" + personToSave.FriendFBID + "');";
+                String sqlString = "INSERT INTO Friends (UserFBID, FriendFBID, Status)"
+                    + "VALUES('" + personToSave.UserFBID + "','" + personToSave.FriendFBID + "',"+0+");";
 
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
                 cmd.ExecuteNonQuery();
@@ -229,8 +276,9 @@ namespace Backendt1
                 conn.ConnectionString = myConnectionString;
                 conn.Open();
                 MySql.Data.MySqlClient.MySqlDataReader mySQLReader = null;
-
-                String sqlString = "SELECT * FROM friends WHERE UserFBID =" + ID.ToString();
+                // test if the friendship recordExisted or not!!
+                String sqlString = "SELECT * FROM friends WHERE UserFBID =" + personToSave.UserFBID
+                                    + " AND friendFBID=" + personToSave.FriendFBID;
 
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
 
@@ -239,10 +287,11 @@ namespace Backendt1
                 if (mySQLReader.Read())
                 {
                     mySQLReader.Close();
-
-                    sqlString = "UPDATE friends SET UserFBID=" + personToSave.UserFBID + ", FriendFBID=" + personToSave.FriendFBID
-                                                              + "'WHERE UserFBID =" + ID;
-
+                    //if friendship existed update it
+                    /*sqlString = "UPDATE friends SET UserFBID=" + personToSave.UserFBID + ", FriendFBID=" + personToSave.FriendFBID
+                                                               + ", Status=" + personToSave.Status + " WHERE UserFBID =" + personToSave.UserFBID;*/
+                    sqlString = "UPDATE friends SET Status=" + personToSave.Status + " WHERE UserFBID =" + personToSave.UserFBID
+                                                               +" AND friendFBID=" + personToSave.FriendFBID;
                     cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
 
                     cmd.ExecuteNonQuery();

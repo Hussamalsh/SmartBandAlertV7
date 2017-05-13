@@ -18,6 +18,7 @@ using Xamarin.Forms;
 using SmartBandAlertV7.Droid.Services;
 using Gcm.Client;
 using Plugin.Permissions;
+using ImageCircle.Forms.Plugin.Droid;
 
 namespace SmartBandAlertV7.Droid
 {
@@ -81,6 +82,7 @@ namespace SmartBandAlertV7.Droid
             Xamarin.FormsMaps.Init(this, savedInstanceState);
 
 
+            ImageCircleRenderer.Init();
 
 
 

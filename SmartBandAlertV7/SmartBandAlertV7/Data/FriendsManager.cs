@@ -24,7 +24,12 @@ namespace SmartBandAlertV7.Data
         }
         public Task DeleteTaskAsync(FriendsList item)
         {
-            return restService.DeleteTodoItemAsync(App.FacebookId, item.FriendFBID);
+            return restService.DeleteTodoItemAsync(item.UserFBID, item.FriendFBID);
+        }
+
+        public void UpdateFriendRequest(FriendsList fr)
+        {
+            restService.acceptFriendReq(fr);
         }
     }
 }

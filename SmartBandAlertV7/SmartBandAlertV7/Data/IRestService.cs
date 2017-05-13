@@ -20,6 +20,8 @@ namespace SmartBandAlertV7.Data
         IObservable<FriendsList[]> RefreshDataAsyncFriends();
         Task SaveTodoItemAsyncFriend(FriendsList item, bool isNewItem);
         Task SaveTodoItemAsync(User item, bool isNewItem);
+
+        void acceptFriendReq(FriendsList fr);
         //Victim
         Task SaveVictimAsync(Victim item, bool isNewItem);
         Task<Victim> SearchVictimAsync(string text);

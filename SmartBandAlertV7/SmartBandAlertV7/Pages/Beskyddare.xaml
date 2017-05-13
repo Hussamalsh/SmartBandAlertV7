@@ -29,22 +29,33 @@
                             <controls:CircleImage Source="{Binding ImgLink}" Aspect="AspectFill" VerticalOptions="Center" HorizontalOptions="Start">
                                 <controls:CircleImage.WidthRequest>
                                     <OnPlatform x:TypeArguments="x:Double"
-                                                iOS="60"
-                                                Android="60"/>
+                                                iOS="50"
+                                                Android="50"/>
                                 </controls:CircleImage.WidthRequest>
                                 <controls:CircleImage.HeightRequest>
                                     <OnPlatform x:TypeArguments="x:Double"
-                                         iOS="60"
-                                        Android="60"/>
+                                         iOS="50"
+                                        Android="50"/>
                                 </controls:CircleImage.HeightRequest>
                             </controls:CircleImage>
 
-                            <Label Text="{Binding UserName}" FontSize="18" VerticalOptions="Center" HorizontalOptions="Center"/>
-
-                            <Image x:Name ="trashImage" Source="trash.png" HeightRequest="30" WidthRequest="30" VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+                            <Label Text="{Binding UserName}" FontSize="15" VerticalOptions="Center" HorizontalOptions="Center"/>
+                           <!-- <Label Text="{Binding FriendReq}" FontSize="9" VerticalOptions="Center" HorizontalOptions="EndAndExpand" BackgroundColor="AliceBlue"/>
+                            Sourceimg == trash.png-->
+                            <Image x:Name ="trashImage" Source="{Binding Sourceimg}" HeightRequest="30" WidthRequest="30" 
+                                   VerticalOptions="Center" HorizontalOptions="EndAndExpand">
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer
                                             Tapped="trashTapped"
+                                            NumberOfTapsRequired="1" />
+                                </Image.GestureRecognizers>
+                            </Image>
+
+                            <Image x:Name ="rejectFR" Source="ic_cancel_black_24dp" HeightRequest="30" WidthRequest="30" 
+                                   VerticalOptions="Center" HorizontalOptions="EndAndExpand" IsVisible="{Binding AddFriend}">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                            Tapped="rejectFR"
                                             NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>

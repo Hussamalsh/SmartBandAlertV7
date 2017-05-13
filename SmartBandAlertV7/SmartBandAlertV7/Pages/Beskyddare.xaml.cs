@@ -2,6 +2,7 @@
 using SmartBandAlertV7.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
@@ -40,9 +41,17 @@ namespace SmartBandAlertV7.Pages
         {
 
             base.OnAppearing();
-            //var list = await App.UserManager.GetTasksAsync();
+
+            getAllFriends();
+
+        }
+
+        public async void getAllFriends()
+        {
             try
             {
+                //FriendsList[] list = null;
+                ObservableCollection<FriendsList> list = new ObservableCollection<FriendsList>();
                 using (var cancelSrc = new CancellationTokenSource())
                 {
                     using (var dlg = UserDialogs.Instance.Progress("Hämtar data", cancelSrc.Cancel, "Avbryt"))
@@ -54,7 +63,25 @@ namespace SmartBandAlertV7.Pages
                             if (dlg.PercentComplete == 0)
                             {
                                 dlg.PercentComplete += 20;
-                                friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+
+                                var fR = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                                foreach (FriendsList f in fR)
+                                {
+                                    if ((f.UserFBID.Equals(App.FacebookId) && f.Status == 1) ||
+                                        (f.FriendFBID.Equals(App.FacebookId) && f.Status == 1)) //added friends
+                                    {
+                                        f.Sourceimg = "trash.png";
+                                        list.Add(f);
+                                    }
+                                    else if (f.FriendFBID.Equals(App.FacebookId) && f.Status == 0) //friend request by others to be denied or accepted
+                                    {
+                                        f.Sourceimg = "check.png";
+                                        //f.FriendReq = "Acceptera vänförfrågan";
+                                        f.AddFriend = true;
+                                        list.Add(f);
+                                    }
+                                }
+                                friendEXISTINGView.ItemsSource = list;
                             }
                             dlg.PercentComplete += 20;
                         }
@@ -62,19 +89,9 @@ namespace SmartBandAlertV7.Pages
                 }
             }
             catch (Exception) { }
-/*
-            using (var cancelSrc = new CancellationTokenSource())
-            {
-                using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
-                {
-                    friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
-                }
-
-            }*/
 
 
         }
-
 
         void topButtonClicked(object sender, EventArgs e)
         {
@@ -115,45 +132,95 @@ namespace SmartBandAlertV7.Pages
         {
             await App.FriendsManager.SaveTaskAsync(item, true);
             //var list = await App.FriendsManager.GetTasksAsync();
-            using (var cancelSrc = new CancellationTokenSource())
-            {
-                using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
-                {
-                    friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
-                }
+            /* using (var cancelSrc = new CancellationTokenSource())
+             {
+                 using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                 {
+                     friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                 }
 
-            }
-           
+             }*/
+            getAllFriends();
+
         }
 
         async void trashTapped(object sender, EventArgs args)
         {
             //((Image)sender).Opacity = 0.5;
-            var answer = await DisplayAlert("Beskyddare", "Vill du ta bort den här beskyddaren?", "Ja", "Nej");
+
+            //((Image)sender).Opacity = 1;
+
+                var button = sender as Image;
+                FriendsList item = button.BindingContext as FriendsList;
+                await CompleteItem(item);
+        }
+
+        async Task CompleteItem(FriendsList item)
+        {
+
+
+            if (!item.AddFriend)
+            {
+                var answer = await DisplayAlert("Beskyddare", "Vill du ta bort den här beskyddaren?", "Ja", "Nej");
+
+                //await manager.SaveTaskAsync(item);
+                if (answer)
+                {
+                    App.FriendsManager.DeleteTaskAsync(item);
+                }
+                else
+                    return;
+            }
+            else   //acceptera vänförfrågan
+            {
+                var answer = await DisplayAlert("Beskyddare", "Vill du Acceptera vänförfrågan?", "Ja", "Nej");
+                if (answer)
+                {
+                    item.Status = 1;
+                    App.FriendsManager.UpdateFriendRequest(item);
+                }
+
+            }
+
+            /* using (var cancelSrc = new CancellationTokenSource())
+             {
+                 using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                 {
+                     friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                 }
+             }*/
+            getAllFriends();
+
+        }
+        async void rejectFR(object sender, EventArgs args)
+        {
+            //((Image)sender).Opacity = 0.5;
+            var answer = await DisplayAlert("Beskyddare", "Vill du Avvisa vänförfrågan?", "Ja", "Nej");
 
             //((Image)sender).Opacity = 1;
             if (answer)
             {
                 var button = sender as Image;
                 FriendsList item = button.BindingContext as FriendsList;
-                await CompleteItem(item);
+                await Rejectfriend(item);
             }
         }
 
-        async Task CompleteItem(FriendsList item)
+        async Task Rejectfriend(FriendsList item)
         {
 
             //await manager.SaveTaskAsync(item);
             App.FriendsManager.DeleteTaskAsync(item);
             /*var list = await App.FriendsManager.GetTasksAsync();
             friendEXISTINGView.ItemsSource = list;*/
-            using (var cancelSrc = new CancellationTokenSource())
-            {
-                using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
-                {
-                    friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
-                }
-            }
+            /* using (var cancelSrc = new CancellationTokenSource())
+             {
+                 using (UserDialogs.Instance.Loading("Hämtar data", cancelSrc.Cancel, "Cancel"))
+                 {
+                     friendEXISTINGView.ItemsSource = await App.FriendsManager.GetTasksAsync().ToTask(cancelSrc.Token);
+                 }
+             }*/
+            getAllFriends();
 
         }
 

@@ -12,5 +12,12 @@ namespace SmartBandAlertV7.Models
         public String UserFBID { get; set; }
         public String UserName { get; set; }
         public String ImgLink { get; set; }
+        public int Status { get; set; }
+
+        public String Sourceimg { get; set; }
+
+        public String FriendReq { get; set; }
+        public bool AddFriend { get; set; }
+
     }
 }

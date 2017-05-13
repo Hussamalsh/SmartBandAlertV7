@@ -73,11 +73,7 @@ namespace SmartBandAlertV7.Data
             }
         }
 
-        public async Task DeleteTodoItemAsync(String userid, String friendid)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Delete, "http://sbat1.azurewebsites.net/api/friends/" + userid + "/" + friendid);
-            var data = client.SendAsync(request).Result;
-        }
+
 
         public async Task<List<User>> SearchUsersAsync(string text)
         {
@@ -142,6 +138,26 @@ namespace SmartBandAlertV7.Data
 
             }
         }
+
+        //------------------> accept friend request
+        public async void acceptFriendReq(FriendsList fr)
+        {
+            var obj = JsonConvert.SerializeObject(fr, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            var request = new HttpRequestMessage(HttpMethod.Put, "https://sbat1.azurewebsites.net/api/friends/" + fr.FriendFBID);
+            request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+            var data = client.SendAsync(request).Result;
+            //var response1 = await client.PutAsync("https://sbat1.azurewebsites.net" + fr.FriendFBID, request.Content);
+        }
+
+        public async Task DeleteTodoItemAsync(String userid, String friendid)
+        {
+            var obj = JsonConvert.SerializeObject("", new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            var request = new HttpRequestMessage(HttpMethod.Delete, "https://sbat1.azurewebsites.net/api/friends/" + userid + "/" + friendid);
+            request.Content = new StringContent(obj, Encoding.UTF8, "application/json");
+            var data = client.SendAsync(request).Result;
+        }
+
+
 
         public IObservable<Location[]> SaveUserLocationAsync()
         {
