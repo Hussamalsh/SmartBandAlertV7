@@ -81,7 +81,8 @@ namespace SmartBandAlertV7.Pages
                                         list.Add(f);
                                     }
                                 }
-                                friendEXISTINGView.ItemsSource = list;
+                                friendEXISTINGView.ItemsSource = list.OrderBy(x => x.Status);
+                                
                             }
                             dlg.PercentComplete += 20;
                         }

@@ -72,11 +72,41 @@ namespace Backendt1
                 MySql.Data.MySqlClient.MySqlDataReader mySQLReader = null;
 
                 //String sqlString = "SELECT FriendFBID FROM friends WHERE UserFBID=" + ID.ToString();
-                String order5 = "SELECT B.UserFBID,B.FriendFBID,C.UserName,c.ImgLink, B.Status "
+                /*String order5 = "SELECT B.UserFBID,B.FriendFBID,C.UserName,c.ImgLink, B.Status "
                                + "FROM friends B INNER JOIN user C on B.UserFBID = C.FBID "
-                               + "WHERE B.FriendFBID =" + ID + " or B.UserFBID =" + ID;
+                               + "WHERE B.FriendFBID =" + ID + " or B.UserFBID =" + ID;*/
+                //accepted friends
+                String order5 = "SELECT B.UserFBID,B.FriendFBID,C.UserName,c.ImgLink, B.Status "
+                               + "FROM friends B INNER JOIN user C on B.FriendFBID = C.FBID "
+                               + "WHERE B.UserFBID =" + ID + " AND B.Status="+ 1;
+
+
+
                 MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(order5, conn);
 
+
+                mySQLReader = cmd.ExecuteReader();
+                while (mySQLReader.Read())
+                {
+                    Friends f = new Friends();
+                    f.UserFBID = mySQLReader.GetString(0);
+                    f.FriendFBID = mySQLReader.GetString(1);
+                    f.UserName = mySQLReader.GetString(2);
+                    f.ImgLink = mySQLReader.GetString(3);
+                    f.Status = mySQLReader.GetInt16(4);
+                    personArrayL.Add(f);
+                }
+
+                //get requested Friend invite
+                String order6 = "SELECT B.UserFBID,B.FriendFBID,C.UserName,c.ImgLink, B.Status "
+                               + "FROM friends B INNER JOIN user C on B.UserFBID = C.FBID "
+                               + "WHERE B.FriendFBID =" + ID;
+
+
+
+                cmd = new MySql.Data.MySqlClient.MySqlCommand(order6, conn);
+
+                mySQLReader.Close();
 
                 mySQLReader = cmd.ExecuteReader();
                 while (mySQLReader.Read())

@@ -142,14 +142,26 @@ namespace Backendt1.Models
                         case "gcm":
                             // Android
                             //{"data":{"message":"From Hussi Need Help from you. The User ID =[132569873917640] [56.6642811] [12.8778527]"}}
-                            var notif = "{ \"data\" : {\"message\":\"" + "From " + UserName + " Need Help from you. The User ID =[" + FBID
+
+                            if (f.FriendFBID.Equals(FBID))
+                            {
+                                var notif = "{ \"data\" : {\"message\":\"" + "From yourfriend" 
+                                + " Need Help from you. The User ID =[" + f.UserFBID
+                                            + "] [" + Latitude + "] [" +Longitude + "]\"}}";
+                                outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, f.UserFBID + "T");
+                            }
+                            else
+                            {
+                                var notif = "{ \"data\" : {\"message\":\"" + "From " + UserName
+                                + " Need Help from you. The User ID =[" + FBID
                                             + "] [" + Latitude + "] [" + Longitude + "]\"}}";
-                            outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, f.FriendFBID + "T");
+                                outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, f.FriendFBID + "T");
+                            }
 
                             if (firsttime)
                             {
                                 System.Threading.Thread.Sleep(500);
-                                notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =[" + FBID
+                                var notif = "{ \"data\" : {\"message\":\"" + "Your alarm was successfully sent to all your friends ID =[" + FBID
                                             + "] [" + Latitude + "] [" + Longitude + "]\"}}";
                                 outcome = await Notifications.Instance.Hub.SendGcmNativeNotificationAsync(notif, FBID + "T");
                                 firsttime = false;

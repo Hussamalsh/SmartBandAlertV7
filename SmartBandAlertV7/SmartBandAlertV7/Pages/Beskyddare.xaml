@@ -20,7 +20,7 @@
            SearchCommand="{Binding SearchCommand}" HeightRequest="50"
                    SearchButtonPressed="MainSearchBar_OnSearchButtonPressed"/>
 
-        <ListView x:Name="friendEXISTINGView" CachingStrategy="RecycleElement" RowHeight="60" >
+        <ListView x:Name="friendEXISTINGView" CachingStrategy="RecycleElement" RowHeight="60">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
