@@ -209,6 +209,7 @@ namespace SmartBandAlertV7.Pages
         {
             if (App.isConnectedBLE)
             {
+                await Task.Delay(500);
                 try
                 {
                     byte[] toBytes = Encoding.UTF8.GetBytes("11");
@@ -245,7 +246,8 @@ namespace SmartBandAlertV7.Pages
             try
             {
                 // don't cleanup connection - force user to d/c
-                if (this.device.Status == ConnectionStatus.Disconnected)
+                //if (this.device.Status == ConnectionStatus.Disconnected)
+                if (App.isConnectedBLE == false)
                 {
                     answer = await DisplayAlert("Bluetooth", "Vill du ansluta till den här bluetooth enheten?", "Ja", "Nej");
                     if (answer == true)
@@ -262,8 +264,34 @@ namespace SmartBandAlertV7.Pages
                             progBarText.IsVisible = true;
                             progBarFirst.IsVisible = true;
                             checkBattery.IsVisible = true;
-                            Button_OnClickedBatteriUppdat(new Object(), EventArgs.Empty);
+                            //START OF BIG TRYCATCH
+                            try
+                            {
+                                Button_OnClickedBatteriUppdat(new Object(), EventArgs.Empty);
+                            }
+                            catch (Exception)
+                            {
+                                try
+                                {
+                                    Button_OnClickedBatteriUppdat(new Object(), EventArgs.Empty);
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
                         }
+                        for(int i = 0; i < 3; i++){
+                            await Task.Delay(500);
+                            try
+                            {
+                                Button_OnClickedBatteriUppdat(new Object(), EventArgs.Empty);
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+                        //END OF BIG TRY CATCH
 
 
 
@@ -275,9 +303,19 @@ namespace SmartBandAlertV7.Pages
                     answer = await DisplayAlert("Bluetooth", "Vill du avbryta anslutningen?", "Ja", "Nej");
                     if (answer == true)
                     {
+                        for(int i = 0; i < 3; i++) { 
+                        await Task.Delay(500);
                         this.device.CancelConnection();
+                        }
                         App.isConnectedBLE = false;
-
+                        if (App.dangerModeOn)
+                        {
+                            App.dangerModeOn = false;
+                            connectToBackend(false);
+                            App.ct.Cancel();
+                            var message = new StopLongRunningTaskMessage();
+                            MessagingCenter.Send(message, "StopLongRunningTaskMessage");
+                        }
                         progBar.IsVisible = false;
                         progBarText.IsVisible = false;
                         progBarFirst.IsVisible = false;
@@ -385,14 +423,18 @@ namespace SmartBandAlertV7.Pages
                         if (!tempval.Equals("emp"))
                             this.Value = tempval;
                         int nr = int.Parse(Value);
-                        if (nr > 107)
-                            await DisplayAlert("Laddar:", " Batteriet laddar.", "OK");
-                        else
-                        {
+                        if (nr > 107){
+                            //await DisplayAlert("Laddar:", " Batteriet laddar.", "OK");
                             double resultlvl = (((double)nr / 107) * 100);
-                            progBar.BindingContext = new { w4 = App.ScreenWidth * 160 / (App.ScreenDPI * 3), theprog = (resultlvl / 100) };
-                            progBarText.BindingContext = new { theprogtext = resultlvl.ToString("#") + "%" };
+                            progBar.BindingContext = new { w4 = App.ScreenWidth * 160 / (App.ScreenDPI * 3), theprog = 1 };
+                            progBarText.BindingContext = new { theprogtext = "Laddar" };
                         }
+                    else
+                    {
+                        double resultlvl = (((double)nr / 107) * 100);
+                        progBar.BindingContext = new { w4 = App.ScreenWidth * 160 / (App.ScreenDPI * 3), theprog = (resultlvl / 100) };
+                        progBarText.BindingContext = new { theprogtext = resultlvl.ToString("#") + "%" };
+                    }
                     }
                     else if (App.dangerModeOn && result.Data.Length > 5)
                     {
