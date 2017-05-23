@@ -137,7 +137,6 @@ namespace SmartBandAlertV7.Pages
                 {
                     this.theBTunits.ItemsSource = bleACRProfileManager.bleprofile.Devices;
                 }
-
                 //111
                 bleACRProfileManager.bleprofile.BleAdapter.WhenScanningStatusChanged().Subscribe(on =>
                 {
@@ -156,7 +155,12 @@ namespace SmartBandAlertV7.Pages
             {
                 //bleACRProfileManager.bleprofile.IsSupported = x == AdapterStatus.PoweredOn;
                 //this.Title = $"BLE Scanner ({x})";
+
                 btWarning.IsVisible = x != AdapterStatus.PoweredOn;
+                this.theBTunits.ItemsSource = null;
+
+
+
             }
             ));
         }
@@ -267,6 +271,7 @@ namespace SmartBandAlertV7.Pages
                             //START OF BIG TRYCATCH
                             try
                             {
+                                await Task.Delay(800);
                                 Button_OnClickedBatteriUppdat(new Object(), EventArgs.Empty);
                             }
                             catch (Exception)
