@@ -157,7 +157,6 @@ namespace SmartBandAlertV7.Pages
                 //this.Title = $"BLE Scanner ({x})";
 
                 btWarning.IsVisible = x != AdapterStatus.PoweredOn;
-                this.theBTunits.ItemsSource = null;
 
 
 
@@ -476,7 +475,11 @@ namespace SmartBandAlertV7.Pages
 
         public async void SendAlarm(bool newornot)
         {
+            try
+            {
                 getLocationAsync(2);
+            }
+            catch (Exception) { }
         }
         public Victim victim { set; get; } = new Victim();
 

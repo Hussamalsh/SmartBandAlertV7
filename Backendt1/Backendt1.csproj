@@ -234,6 +234,7 @@
     <Compile Include="DataObjects\Victim.cs" />
     <Compile Include="FriendsPersistence.cs" />
     <Compile Include="LocationPersistence.cs" />
+    <Compile Include="MessageHandlers\APIKeyMessageHandler.cs" />
     <Compile Include="Models\AllUsersDM.cs" />
     <Compile Include="Models\DangerMode.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
